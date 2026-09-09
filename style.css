@@ -18,7 +18,7 @@ canvas.pixel {
   position: absolute; box-sizing: border-box;
   display: flex; align-items: center; justify-content: center;
   min-width: 80px; min-height: 68px; padding: 8px 26px;
-  border: 4px solid #2b1b0e; border-radius: 18px;
+  border: 4px solid #2b1b0e; border-radius: 0;
   background: #ffcc4d; color: #2b1b0e;
   font-size: 30px; font-weight: bold; cursor: pointer;
   box-shadow: 0 6px 0 #b9862b; white-space: nowrap;
@@ -34,7 +34,7 @@ canvas.pixel {
 .btn.icon { min-width: 68px; padding: 0; font-size: 34px; }
 .bubble {
   position: absolute; box-sizing: border-box;
-  background: #fff; border: 4px solid #2b1b0e; border-radius: 26px;
+  background: #fff; border: 4px solid #2b1b0e; border-radius: 0; box-shadow: 6px 6px 0 rgba(0,0,0,.35);
   padding: 20px 26px; font-size: 28px; line-height: 1.3; color: #2b1b0e;
 }
 .bubble .who { font-size: 18px; font-weight: bold; color: #7a4a22; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
@@ -49,8 +49,9 @@ canvas.pixel {
 }
 .bubble.right:after { right: -22px; border-left-color: #fff; }
 .hint { position: absolute; color: #fff; font-size: 20px; opacity: .8; text-shadow: 0 2px 0 #000; }
-.label { position: absolute; background: rgba(255,255,255,.85); border-radius: 12px; padding: 4px 14px; color: #2b1b0e; font-size: 24px; font-weight: bold; }
-.card .badge { position: absolute; right: -10px; top: -10px; width: 30px; height: 30px; border-radius: 50%; background: #4e9a35; color: #fff; font-size: 20px; line-height: 30px; border: 3px solid #2b1b0e; }
+.label { position: absolute; background: rgba(255,255,255,.9); border: 3px solid #2b1b0e; border-radius: 0; padding: 4px 14px; color: #2b1b0e; font-size: 24px; font-weight: bold; }
+.card .badge { position: absolute; right: -8px; top: -8px; }
+.card .lock { display: flex; justify-content: center; margin: 2px 0 6px; }
 .title-text {
   position: absolute; left: 0; right: 0; text-align: center;
   color: #ffcc4d; font-weight: bold; text-shadow: 4px 4px 0 #2b1b0e, -2px -2px 0 #2b1b0e, 2px -2px 0 #2b1b0e, -2px 2px 0 #2b1b0e;
@@ -58,20 +59,20 @@ canvas.pixel {
 input.name {
   position: absolute; box-sizing: border-box; width: 340px; height: 68px;
   font-size: 32px; font-family: inherit; font-weight: bold; text-align: center;
-  border: 4px solid #2b1b0e; border-radius: 16px; background: #fff; color: #2b1b0e;
+  border: 4px solid #2b1b0e; border-radius: 0; background: #fff; color: #2b1b0e;
   outline: none;
 }
-.avatar-pick { position: absolute; width: 130px; height: 150px; border: 4px solid transparent; border-radius: 20px; cursor: pointer; }
+.avatar-pick { position: absolute; width: 130px; height: 160px; border: 4px solid transparent; border-radius: 0; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; }
 .avatar-pick.sel { border-color: #ffcc4d; background: rgba(255,255,255,.25); }
 .panel {
   position: absolute; box-sizing: border-box; background: #fff8e6; border: 4px solid #2b1b0e;
-  border-radius: 20px; padding: 20px; color: #2b1b0e; font-size: 24px;
+  border-radius: 0; padding: 20px; color: #2b1b0e; font-size: 24px; box-shadow: 8px 8px 0 rgba(0,0,0,.35);
 }
 .panel h2 { margin: 0 0 12px; font-size: 30px; }
 .card {
   position: absolute; box-sizing: border-box; background: #fffdf5; border: 3px solid #2b1b0e;
-  border-radius: 10px; padding: 8px; color: #2b1b0e; text-align: center; cursor: pointer;
-  box-shadow: 3px 3px 0 rgba(0,0,0,.3);
+  border-radius: 0; padding: 8px; color: #2b1b0e; text-align: center; cursor: pointer;
+  box-shadow: 4px 4px 0 rgba(0,0,0,.3);
 }
 .card.locked { opacity: .55; cursor: default; }
 .card .num { font-size: 34px; font-weight: bold; }
@@ -80,7 +81,7 @@ input.name {
 .option {
   position: absolute; box-sizing: border-box; left: 300px; width: 620px; min-height: 84px;
   display: flex; align-items: center; padding: 10px 22px;
-  background: #fffdf5; border: 4px solid #2b1b0e; border-radius: 18px;
+  background: #fffdf5; border: 4px solid #2b1b0e; border-radius: 0;
   font-size: 26px; color: #2b1b0e; cursor: pointer; box-shadow: 0 6px 0 #b9a58a;
 }
 .option:active { transform: translateY(4px); box-shadow: 0 2px 0 #b9a58a; }

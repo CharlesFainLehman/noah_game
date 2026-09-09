@@ -2,6 +2,8 @@
 import { Pixel, PW, PH } from '../engine/pixel.js';
 import { P } from '../art/palette.js';
 import { sprites } from '../art/sprites.js';
+import { pixelCharacter, CH } from '../art/pixel-characters.js';
+import { drawBackdrop } from '../art/pixel-backdrops.js';
 import { makeRng } from '../engine/rng.js';
 import { mastery, commit } from '../engine/save.js';
 import { record } from '../engine/mastery.js';
@@ -43,16 +45,10 @@ export function orderUp({ customer = 'Gaston', onDone }) {
   function draw() {
     const c = px.ctx;
     px.clearHits();
-    // Room
-    px.clear(P.cream);
-    for (let i = 0; i < PW; i += 24) px.rect(i, 0, 12, 108, '#ffe4e8');
-    px.rect(0, 108, PW, 6, P.woodDark); px.rect(0, 114, PW, PH - 114, P.wood);
-    for (let i = 0; i < PW; i += 40) px.rect(i, 114, 1, PH - 114, P.woodDark);
-    // Shelf with breads
-    px.rect(6, 30, 56, 3, P.woodDark);
-    for (let i = 0; i < 3; i++) { px.rect(10 + i * 18, 22, 14, 8, P.brown); px.rect(11 + i * 18, 21, 12, 1, P.tan); }
-    // Gaston
-    px.blit(S.gaston, 8, 44, 2);
+    drawBackdrop(px, 'bakery');
+    // Gaston behind the counter
+    const gExpr = state === 'bad' ? 'sad' : (state === 'good' || state === 'done') ? 'happy' : 'normal';
+    px.blit(pixelCharacter('goose', gExpr), 2, 112 - CH * 2, 2);
     // Stars
     for (let i = 0; i < WIN; i++) px.blit(i < wins ? S.star : S.starOff, 284 + i * 12, 4);
     // Order card
@@ -130,6 +126,7 @@ export function orderUp({ customer = 'Gaston', onDone }) {
   }
 
   return {
+    exit() { window.__orderUp = null; },
     enter(root) {
       px = new Pixel(root);
       newRound();

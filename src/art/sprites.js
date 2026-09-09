@@ -15,10 +15,19 @@ export function sprites() {
     bell: sprite(R.BELL, { k: P.k, y: P.yellow }),
     star: sprite(R.STAR, { k: P.k, y: P.yellow }),
     starOff: sprite(R.STAR, { k: P.k, y: '#c9c0aa' }),
-    gaston: sprite(R.GASTON, { k: P.k, w: P.w, o: P.orange, a: '#7fd1f5' }),
     arrow: sprite(R.ARROW, { k: P.k, y: P.yellow }),
     check: sprite(R.CHECK, { k: P.k, g: P.green }),
     lock: sprite(R.LOCK, { k: P.k, g: P.grey }),
+    clueSlip: sprite(R.SLIP, { k: P.k, w: P.w }),
+    clueWall: sprite(R.WALL, { k: P.k, t: P.tan, b: '#c58b4a', w: P.w }),
+    clueMirror: sprite(R.MIRROR, { k: P.k, b: '#c58b4a', s: '#cfe9ff', w: P.w }),
+    cluePiece: sprite(R.PIECE, { k: P.k, p: '#f6e2c0', b: '#8b5a2b', r: P.red }),
+    glass: sprite(R.GLASS, { k: P.k, s: P.sky, w: P.w, b: P.wood }),
   };
   return cache;
+}
+
+export function clueSprite(icon) {
+  const S = sprites();
+  return { slip: S.clueSlip, wall: S.clueWall, mirror: S.clueMirror, piece: S.cluePiece }[icon];
 }

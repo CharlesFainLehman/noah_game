@@ -1,8 +1,8 @@
-// Story panels: backdrop, one character, one speech bubble. Tap to advance.
-import { el, svgRoot } from '../engine/svg.js';
+// Story panels: pixel backdrop, one character, one speech bubble. Tap to advance.
+import { Pixel } from '../engine/pixel.js';
 import { div, bubble } from '../engine/ui.js';
-import { character, place, SPECIES } from '../art/characters.js';
-import { backdrop } from '../art/backdrops.js';
+import { pixelCharacter, SPECIES, CW, CH } from '../art/pixel-characters.js';
+import { drawBackdrop } from '../art/pixel-backdrops.js';
 import { save } from '../engine/save.js';
 import { sfx } from '../engine/audio.js';
 
@@ -16,21 +16,19 @@ export function speaker(who) {
 }
 
 export function comic(panels, onDone) {
-  let i = 0, root = null, lastTap = 0;
+  let i = 0, root = null, lastTap = 0, px = null;
 
   function show() {
     root.innerHTML = '';
     const p = panels[i];
     const sp = speaker(p.who);
     const right = p.side === 'right';
-    const svg = svgRoot();
-    svg.append(backdrop(p.bg));
-    svg.append(place(character(sp.species, { expr: p.expr }), right ? 760 : 200, 528, 1.25, right));
-    root.append(svg);
-    const b = bubble(sp.label, fmt(p.text), right ? { x: 40, y: 50, w: 520, side: 'right' } : { x: 400, y: 50, w: 520, side: 'left' });
+    px = new Pixel(root);
+    drawBackdrop(px, p.bg);
+    px.blit(pixelCharacter(sp.species, p.expr), right ? 320 - 16 - CW * 3 : 16, 176 - CH * 3, 3);
+    const b = bubble(sp.label, fmt(p.text), right ? { x: 40, y: 40, w: 520, side: 'right' } : { x: 400, y: 40, w: 520, side: 'left' });
     b.classList.add('pop');
     root.append(b);
-    // Panel dots
     const dots = div('', { position: 'absolute', left: '0', right: '0', bottom: '14px', textAlign: 'center', fontSize: '28px', color: '#fff', textShadow: '0 2px 0 #000' });
     dots.textContent = panels.map((_, j) => (j === i ? '●' : '○')).join(' ');
     root.append(dots);

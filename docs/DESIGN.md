@@ -11,7 +11,7 @@ Decisions so far:
 
 | Item | Decision |
 |---|---|
-| Art | Mixed. Pixel art for town and mini-games. Vector cartoon for story scenes. |
+| Art | All pixel art. Characters are 32x48 sprites built from shared parts. Scenes are 320x180 scaled 3x. |
 | Device | Tablet and laptop. Touch first. Mouse works. |
 | Reading | Reads well. Short sentences on screen. Optional voice. |
 | Story | Detective agency in a small animal town. |
@@ -146,13 +146,13 @@ Per mini-game, store: current level (1 to 3), correct streak, wrong streak.
 
 | Screen | Art | Purpose |
 |---|---|---|
-| Title | Vector | Start. New detective: type a name, pick an avatar. Or resume. |
-| Office (hub) | Vector | Case board, daily file, trophy shelf, notebook, settings door. |
-| Comic | Vector | Story panels with speech bubbles. |
+| Title | Pixel | Start. New detective: type a name, pick an avatar. Or resume. |
+| Office (hub) | Pixel | Case board, daily file, trophy shelf, notebook, settings door. |
+| Comic | Pixel | Story panels with speech bubbles. |
 | Town map | Pixel | Travel between locations. |
 | Mini-game | Pixel | One game at a time. |
-| Deduction | Vector | Three clue cards, three explanations. |
-| Notebook | Vector | Clues, map pieces, badges. |
+| Deduction | Pixel | Three clue cards, three explanations. |
+| Notebook | HTML panel, pixel icons | Clues, map pieces, badges. |
 | Parent screen | Plain | Progress by skill. Reset. Level limits. Sound. Change name. Export and import save. |
 
 Parent screen is gated by a hold-to-open button (hold for 3 seconds).
@@ -172,8 +172,9 @@ Parent screen is gated by a hold-to-open button (hold for 3 seconds).
 - Pixel art: sprites defined as text grids in JavaScript. Each character is a
   palette index. Rendered once to an offscreen canvas. Drawn with image
   smoothing off.
-- Vector art: SVG built in JavaScript. Characters are groups of parts (body,
-  head, eyes, mouth, arms) so expressions and simple animation can change.
+- Characters: one shared 32x48 body template plus per-animal parts (ears, muzzle,
+  tail, hat, accessories) and swappable eyes and mouths for expressions. Composed once and cached.
+- Speech bubbles, buttons, and cards are HTML with square corners and hard shadows so they sit with the pixel art.
 - Scenes: a small scene stack. Each scene has `enter`, `update`, `draw`, `exit`.
 - Save: one JSON object in localStorage, with a version number. Export and
   import as a text code so the save can move between devices.

@@ -1,6 +1,6 @@
 # The Pebbleton Detective Agency
 
-A browser game for first-grade math. Animal detectives, small mysteries, a treasure map.
+A browser game for first-grade math. Animal detectives, small mysteries, a treasure map. All pixel art.
 
 Design: [docs/DESIGN.md](docs/DESIGN.md)
 

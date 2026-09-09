@@ -1,9 +1,9 @@
 // The agency office: hub screen with the case board.
-import { el, svgRoot } from '../engine/svg.js';
+import { Pixel } from '../engine/pixel.js';
 import { div, button, bubble } from '../engine/ui.js';
-import { character, place } from '../art/characters.js';
-import { backdrop } from '../art/backdrops.js';
-import { clueIcon } from '../art/clues.js';
+import { pixelCharacter, iconCanvas, CH } from '../art/pixel-characters.js';
+import { drawBackdrop } from '../art/pixel-backdrops.js';
+import { sprites, clueSprite } from '../art/sprites.js';
 import { save, commit, caseState } from '../engine/save.js';
 import { go } from '../engine/stage.js';
 import { CASES, AVAILABLE, CASE_DATA } from '../data/cases.js';
@@ -13,15 +13,15 @@ import { sfx } from '../engine/audio.js';
 export function office() {
   return {
     enter(root) {
-      const svg = svgRoot();
-      svg.append(backdrop('office'));
-      svg.append(place(character(save.player.avatar, { expr: 'happy' }), 380, 528, 0.95));
-      svg.append(place(character('basset', { expr: 'normal' }), 840, 528, 1.0));
-      root.append(svg);
+      const S = sprites();
+      const px = new Pixel(root);
+      drawBackdrop(px, 'office');
+      px.blit(pixelCharacter(save.player.avatar, 'happy'), 96, 174 - CH * 2, 2);
+      px.blit(pixelCharacter('basset', 'normal'), 252, 174 - CH * 2, 2);
 
       const say = t => {
         root.querySelectorAll('.bubble').forEach(b => b.remove());
-        const b = bubble('Bart', t, { x: 470, y: 300, w: 330, side: 'right' });
+        const b = bubble('Bart', t, { x: 440, y: 290, w: 300, side: 'right' });
         b.style.fontSize = '24px';
         b.classList.add('pop'); root.append(b);
       };
@@ -34,8 +34,10 @@ export function office() {
         const card = div('card' + (open ? '' : ' locked') + (st.status === 'closed' ? ' done' : ''), {
           left: (78 + (i % 4) * 96) + 'px', top: (66 + Math.floor(i / 4) * 110) + 'px', width: '84px', height: '100px',
         });
-        card.innerHTML = `<div class="num">${open ? c.id : '🔒'}</div><div class="ttl">${c.title}</div>` +
-          (st.status === 'closed' ? '<div class="badge">✓</div>' : '');
+        if (open) card.append(div('num', {}, String(c.id)));
+        else { const l = div('lock'); l.append(iconCanvas(S.lock, 3)); card.append(l); }
+        card.append(div('ttl', {}, c.title));
+        if (st.status === 'closed') { const b = div('badge'); b.append(iconCanvas(S.check, 3)); card.append(b); }
         card.addEventListener('pointerdown', e => {
           e.stopPropagation(); sfx.tap();
           if (!open) { say('That case is not open yet. Try case 3.'); return; }
@@ -44,12 +46,9 @@ export function office() {
         root.append(card);
       });
 
-      // Map pieces on the desk
-      const pieces = div('label', { left: '20px', top: '410px', fontSize: '20px' }, `Map pieces: ${save.mapPieces.length} / 8`);
-      root.append(pieces);
-
+      root.append(div('label', { left: '20px', top: '410px', fontSize: '20px' }, `Map pieces: ${save.mapPieces.length} / 8`));
       root.append(button('Notebook', { x: 20, y: 456, cls: 'blue small', onTap: () => openNotebook(root) }));
-      const mute = button(save.muted ? '🔇' : '🔊', { x: 880, y: 12, cls: 'small icon', onTap: () => { save.muted = !save.muted; commit(); mute.textContent = save.muted ? '🔇' : '🔊'; } });
+      const mute = button(save.muted ? 'Sound: off' : 'Sound: on', { x: 760, y: 12, cls: 'small', onTap: () => { save.muted = !save.muted; commit(); mute.textContent = save.muted ? 'Sound: off' : 'Sound: on'; } });
       root.append(mute);
     },
   };
@@ -65,16 +64,15 @@ function openNotebook(root) {
   const row = div('', { display: 'flex', gap: '16px', flexWrap: 'wrap', minHeight: '120px' });
   if (!clues.length) row.textContent = 'No clues yet. Solve puzzles to find clues.';
   for (const cl of clues) {
-    const item = div('', { textAlign: 'center', width: '150px', fontSize: '18px' });
-    const s = svgRoot(90, 90); s.setAttribute('viewBox', '0 0 100 100'); s.style.position = 'static';
-    s.append(clueIcon(cl.icon)); item.append(s, div('', {}, cl.title)); row.append(item);
+    const item = div('', { textAlign: 'center', width: '150px', fontSize: '18px', display: 'flex', flexDirection: 'column', alignItems: 'center' });
+    item.append(iconCanvas(clueSprite(cl.icon), 5), div('', {}, cl.title)); row.append(item);
   }
   p.append(row);
   const h = document.createElement('h2'); h.textContent = 'Map pieces'; p.append(h);
   const pr = div('', { display: 'flex', gap: '10px' });
   for (let i = 1; i <= 8; i++) {
-    const slot = div('', { width: '70px', height: '70px', border: '3px dashed #8b5a2b', borderRadius: '8px', background: save.mapPieces.includes(i) ? '#f6e2c0' : 'transparent' });
-    if (save.mapPieces.includes(i)) { const s = svgRoot(70, 70); s.setAttribute('viewBox', '0 0 100 100'); s.style.position = 'static'; s.append(clueIcon('piece')); slot.append(s); }
+    const slot = div('', { width: '70px', height: '70px', border: '3px dashed #8b5a2b', background: save.mapPieces.includes(i) ? '#f6e2c0' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' });
+    if (save.mapPieces.includes(i)) slot.append(iconCanvas(clueSprite('piece'), 4));
     pr.append(slot);
   }
   p.append(pr);
