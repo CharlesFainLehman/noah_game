@@ -1,6 +1,6 @@
 # Design Document: The Pebbleton Detective Agency
 
-Status: DRAFT v0.2. Open questions are marked `[?]`.
+Status: v0.3. Case 3 slice built. Open questions are marked `[?]`.
 
 ## 1. Goal
 
@@ -137,7 +137,7 @@ The story alone is about 8 sessions. These features make it last longer.
 
 Per mini-game, store: current level (1 to 3), correct streak, wrong streak.
 
-- Three correct in a row at a level: streak resets, level goes up (max 3).
+- Five correct in a row at a level: streak resets, level goes up (max 3). Three in a row wins a location, so a level-up takes about two locations.
 - Two wrong in a row: level goes down (min 1). Streak resets.
 - Case story rounds use the stored level.
 - Parent screen can lock a minimum or maximum level.
@@ -179,7 +179,7 @@ Parent screen is gated by a hold-to-open button (hold for 3 seconds).
   import as a text code so the save can move between devices.
 - Tests: `node --test` for question generators and the adaptive logic. Rendering
   is checked by eye.
-- Hosting: GitHub Pages. Also runs by opening `index.html` from disk.
+- Hosting: GitHub Pages, or any static server. ES modules need HTTP, so `index.html` cannot be opened straight from disk in Chrome.
 
 ### File layout
 
@@ -198,11 +198,11 @@ docs/              this document
 
 ## 9. Build order
 
-1. Engine: canvas scaling, input, scene stack, save. One placeholder scene.
-2. One mini-game end to end (Order Up). Adaptive logic. Tests.
-3. Office hub and town map. Save and resume.
-4. Comic scene and deduction scene. Case 1 complete.
-5. Remaining mini-games, one at a time. Cases 2 through 8.
+1. ~~Engine: canvas scaling, input, scene stack, save.~~ Done.
+2. ~~One mini-game end to end (Order Up). Adaptive logic. Tests.~~ Done.
+3. ~~Office hub and town map. Save and resume.~~ Done.
+4. ~~Comic scene and deduction scene. Case 3 complete.~~ Done.
+5. Remaining mini-games, one at a time. Cases 1, 2, 4 through 8.
 6. Daily Case File, badges, office upgrades.
 7. Art pass. Sound.
 8. Parent screen. Export and import save.
