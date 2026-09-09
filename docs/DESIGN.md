@@ -1,6 +1,6 @@
 # Design Document: The Pebbleton Detective Agency
 
-Status: DRAFT v0.1. Open questions are marked `[?]`.
+Status: DRAFT v0.2. Open questions are marked `[?]`.
 
 ## 1. Goal
 
@@ -45,7 +45,7 @@ Rules for tone:
 | Name | Animal | Role | Trait |
 |---|---|---|---|
 | Detective Bartholomew Basset ("Bart") | Basset hound | Head detective, mentor | Slow, sleepy, always right in the end. Loves donuts. |
-| Player | Chosen by player `[?]` | Junior detective | Fox, rabbit, or hedgehog. |
+| Player | Chosen by player | Junior detective | Fox, rabbit, hedgehog, or cat. Player types a name on first start. |
 | Pip | Pigeon | Messenger | Talks too fast. Delivers new cases. |
 | Mrs. Nutley | Squirrel | General store | Keeps losing count of her acorns. |
 | Chef Gaston | Goose | Bakery | Dramatic. Cries when orders are wrong. |
@@ -146,14 +146,14 @@ Per mini-game, store: current level (1 to 3), correct streak, wrong streak.
 
 | Screen | Art | Purpose |
 |---|---|---|
-| Title | Vector | Start. Pick or resume detective. |
+| Title | Vector | Start. New detective: type a name, pick an avatar. Or resume. |
 | Office (hub) | Vector | Case board, daily file, trophy shelf, notebook, settings door. |
 | Comic | Vector | Story panels with speech bubbles. |
 | Town map | Pixel | Travel between locations. |
 | Mini-game | Pixel | One game at a time. |
 | Deduction | Vector | Three clue cards, three explanations. |
 | Notebook | Vector | Clues, map pieces, badges. |
-| Parent screen | Plain | Progress by skill. Reset. Level limits. Sound. Export and import save. |
+| Parent screen | Plain | Progress by skill. Reset. Level limits. Sound. Change name. Export and import save. |
 
 Parent screen is gated by a hold-to-open button (hold for 3 seconds).
 
@@ -162,7 +162,6 @@ Parent screen is gated by a hold-to-open button (hold for 3 seconds).
 - Works at any screen size. Game area scales to fit. Pixel scenes scale by
   whole-number factors so pixels stay crisp.
 - Touch, mouse, and keyboard (arrows, enter) all work.
-- Optional voice: browser text-to-speech reads speech bubbles. On by default `[?]`.
 - Sound effects made with Web Audio. No audio files. Mute toggle.
 - No timers on any puzzle in v1. `[?]`
 
@@ -200,20 +199,24 @@ docs/              this document
 ## 9. Build order
 
 1. Engine: canvas scaling, input, scene stack, save. One placeholder scene.
-2. One mini-game end to end (Count the Pile). Adaptive logic. Tests.
+2. One mini-game end to end (Order Up). Adaptive logic. Tests.
 3. Office hub and town map. Save and resume.
 4. Comic scene and deduction scene. Case 1 complete.
 5. Remaining mini-games, one at a time. Cases 2 through 8.
 6. Daily Case File, badges, office upgrades.
-7. Art pass. Sound. Voice.
+7. Art pass. Sound.
 8. Parent screen. Export and import save.
 
-## 10. Open questions
+## 10. Decided
 
-- `[?]` Player name. Use his real name, or let him type one?
-- `[?]` Player avatar choices. Fox, rabbit, hedgehog proposed.
+- Player types a name on first start. Editable on the parent screen.
+- Avatar choices: fox, rabbit, hedgehog, cat.
+- No text-to-speech.
+- First mini-game built: Order Up (addition).
+
+## 11. Open questions
+
 - `[?]` Session length target. 15 minutes per case proposed.
-- `[?]` Voice narration on by default?
 - `[?]` Any animals he dislikes or fears? Any he loves that should be in the cast?
 - `[?]` Timed challenges. Proposed: none in v1.
 - `[?]` Skill priorities. Anything to add, remove, or move earlier?
