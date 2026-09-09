@@ -15,7 +15,7 @@ Decisions so far:
 | Device | Tablet and laptop. Touch first. Mouse works. |
 | Reading | Reads well. Short sentences on screen. Optional voice. |
 | Story | Detective agency in a small animal town. |
-| Tech | Plain HTML, JavaScript, Canvas, SVG. No build step. Saves in localStorage. |
+| Tech | Plain HTML, JavaScript, Canvas. No build step. Saves in localStorage. |
 
 ## 2. Story
 
@@ -79,7 +79,7 @@ and harder numbers (within 100, two-digit addition). Not built in v1.
 
 Every case follows the same five steps.
 
-1. **Case intro.** Vector comic, 3 to 5 panels, speech bubbles. Pip delivers
+1. **Case intro.** Pixel comic, 3 to 5 panels, speech bubbles. Pip delivers
    the case. Bart explains it. Tap to advance.
 2. **Investigate.** Pixel-art town map. Three locations light up. Tap one to
    travel. Each location runs one mini-game.
