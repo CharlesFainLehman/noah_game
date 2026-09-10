@@ -1,10 +1,11 @@
-// Pick the explanation that fits the clues.
+// Two steps: pick the suspect, then pick how they did it.
 import { Pixel } from '../engine/pixel.js';
 import { div, bubble } from '../engine/ui.js';
-import { pixelCharacter, iconCanvas, CW, CH } from '../art/pixel-characters.js';
+import { pixelCharacter, portrait, iconCanvas, CH } from '../art/pixel-characters.js';
 import { drawBackdrop } from '../art/pixel-backdrops.js';
 import { clueSprite } from '../art/sprites.js';
 import { makeRng } from '../engine/rng.js';
+import { caseState } from '../engine/save.js';
 import { sfx } from '../engine/audio.js';
 import { fmt } from './comic.js';
 
@@ -14,46 +15,81 @@ export function deduction(c, onSolved) {
       const px = new Pixel(root);
       const drawBart = expr => { drawBackdrop(px, 'office'); px.blit(pixelCharacter('basset', expr), 8, 176 - CH * 3, 3); };
       drawBart('normal');
+      const found = caseState(c.id).clues;
 
       let bub;
       const say = (t, expr) => {
         if (bub) bub.remove();
         bub = bubble('Bart', t, { x: 300, y: 14, w: 640, side: 'left' });
+        bub.style.fontSize = '24px';
         bub.classList.add('pop'); root.append(bub);
         drawBart(expr);
       };
-      say(fmt(c.deduction.question), 'normal');
-
-      const cards = {};
-      c.locations.forEach((loc, i) => {
-        const card = div('card', { left: (300 + i * 220) + 'px', top: '140px', width: '200px', height: '104px', padding: '4px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'default' });
-        card.append(iconCanvas(clueSprite(loc.clue.icon), 5), div('', { fontSize: '17px', textAlign: 'left', lineHeight: '1.15' }, `<b>Clue ${i + 1}</b><br>${loc.clue.title}`));
-        cards[loc.clue.id] = card; root.append(card);
-      });
-
-      const rng = makeRng();
-      const opts = rng.shuffle(c.deduction.options);
-      let solved = false;
       const opened = performance.now();
-      opts.forEach((o, i) => {
-        const d = div('option', { top: (262 + i * 92) + 'px' });
-        d.append(div('letter', {}, 'ABC'[i]), div('', {}, fmt(o.text)));
-        d.addEventListener('pointerdown', e => {
-          e.stopPropagation();
-          if (solved || d.classList.contains('no') || performance.now() - opened < 500) return;
-          if (o.ok) {
-            solved = true; sfx.fanfare(); d.style.background = '#dff5d0';
-            say('That is it! The mirror! Let us go tell Gaston.', 'happy');
-            setTimeout(onSolved, 1800);
-          } else {
-            sfx.bad(); d.classList.add('no');
-            say(fmt(o.reply), 'normal');
-            const card = cards[o.clue];
-            if (card) { card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash'); }
-          }
+      const items = [];
+      const clear = () => { items.forEach(i => i.remove()); items.length = 0; };
+
+      // Clue strip along the bottom.
+      const clueStrip = () => {
+        c.locations.forEach((loc, i) => {
+          const card = div('card', { left: (300 + i * 130) + 'px', top: '412px', width: '120px', height: '112px', padding: '4px', cursor: 'default', fontSize: '14px', lineHeight: '1.1' });
+          card.append(iconCanvas(clueSprite(loc.clue.icon), 3));
+          card.firstChild.style.margin = '0 auto';
+          card.append(div('', {}, `<b>Clue ${i + 1}</b><br>${found.includes(loc.clue.id) ? loc.clue.title : '???'}`));
+          items.push(card); root.append(card);
         });
-        root.append(d);
-      });
+      };
+
+      function stepWho() {
+        say(fmt(c.deduction.who), 'normal');
+        clueStrip();
+        const rng = makeRng();
+        rng.shuffle(c.suspects).forEach((s, i) => {
+          const card = div('card', { left: (300 + i * 160) + 'px', top: '150px', width: '150px', height: '240px', padding: '6px', fontSize: '16px', lineHeight: '1.15' });
+          const pic = iconCanvas(portrait(s.species), 3); pic.style.margin = '0 auto';
+          card.append(pic, div('', { fontWeight: 'bold', fontSize: '18px', margin: '4px 0' }, s.name), div('', {}, s.theory));
+          card.addEventListener('pointerdown', e => {
+            e.stopPropagation();
+            if (card.classList.contains('locked') || performance.now() - opened < 500) return;
+            if (s.guilty) {
+              sfx.good(); card.style.background = '#dff5d0';
+              say(fmt(c.deduction.whoRight), 'surprised');
+              setTimeout(() => { clear(); stepHow(); }, 1600);
+            } else {
+              sfx.bad(); card.classList.add('locked');
+              const stamp = div('', { color: '#e0453b', fontWeight: 'bold', fontSize: '22px', marginTop: '4px' }, 'CLEARED');
+              card.append(stamp);
+              say(fmt(s.reply), 'normal');
+              const idx = c.locations.findIndex(l => l.clue.id === s.clearedBy);
+              const cc = items[idx];
+              if (cc) { cc.classList.remove('flash'); void cc.offsetWidth; cc.classList.add('flash'); }
+            }
+          });
+          items.push(card); root.append(card);
+        });
+      }
+
+      function stepHow() {
+        say(fmt(c.deduction.how), 'normal');
+        const rng = makeRng();
+        let solved = false;
+        rng.shuffle(c.deduction.methods).forEach((o, i) => {
+          const d = div('option', { top: (200 + i * 100) + 'px' });
+          d.append(div('letter', {}, 'ABC'[i]), div('', {}, fmt(o.text)));
+          d.addEventListener('pointerdown', e => {
+            e.stopPropagation();
+            if (solved || d.classList.contains('no')) return;
+            if (o.ok) {
+              solved = true; sfx.fanfare(); d.style.background = '#dff5d0';
+              say(fmt(c.deduction.solved), 'happy');
+              setTimeout(onSolved, 1800);
+            } else { sfx.bad(); d.classList.add('no'); say(fmt(o.reply), 'normal'); }
+          });
+          items.push(d); root.append(d);
+        });
+      }
+
+      stepWho();
     },
   };
 }

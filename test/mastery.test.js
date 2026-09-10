@@ -30,5 +30,6 @@ test('never above max level, and mastered at the top', () => {
   const m = newMastery();
   for (let i = 0; i < UP_STREAK * 5; i++) record(m, true);
   assert.equal(m.level, MAX_LEVEL);
+  assert.equal(MAX_LEVEL, 4);
   assert.ok(isMastered(m));
 });

@@ -174,3 +174,77 @@ export const GLASS = [
   '.............kk.',
 ];
 ALL.SLIP = SLIP; ALL.WALL = WALL; ALL.MIRROR = MIRROR; ALL.PIECE = PIECE; ALL.GLASS = GLASS;
+
+// Items for counting games, 12x12.
+export const FISH = [
+  '............',
+  '............',
+  '...kkkkk..k.',
+  '..kssssskkbk',
+  '.kswsssssbbk',
+  'kssksssssbbk',
+  'kssssssssbbk',
+  '.kssssssskbk',
+  '..kkkkkkk.k.',
+  '............',
+  '............',
+  '............',
+];
+export const DONUT = [
+  '............',
+  '...kkkkkk...',
+  '..kppppppk..',
+  '.kppppppppk.',
+  'kpppkkkkpppk',
+  'kppk....kppk',
+  'kppk....kppk',
+  'kpppkkkkpppk',
+  '.kppppppppk.',
+  '..kppppppk..',
+  '...kkkkkk...',
+  '............',
+];
+export const COOKIE = [
+  '............',
+  '...kkkkkk...',
+  '..kccccccck.',
+  '.kccdcccccck',
+  'kcccccdcccck',
+  'kcdcccccccck',
+  'kcccccccdcck',
+  'kccdccccccck',
+  '.kcccccdcck.',
+  '..kccccccck.',
+  '...kkkkkk...',
+  '............',
+];
+export const ACORN = [
+  '............',
+  '.....kk.....',
+  '....kddk....',
+  '..kkddddkk..',
+  '.kddddddddk.',
+  '.kkkkkkkkkk.',
+  '..kaaaaaak..',
+  '..kaaaaaak..',
+  '..kaaaaaak..',
+  '...kaaaak...',
+  '....kkkk....',
+  '............',
+];
+
+// Filled circle with outline, as rows. Used for coins.
+export function circleRows(d, fill = 'c') {
+  const rows = [];
+  const r = d / 2;
+  for (let y = 0; y < d; y++) {
+    let row = '';
+    for (let x = 0; x < d; x++) {
+      const dx = x + 0.5 - r, dy = y + 0.5 - r, dist = Math.sqrt(dx * dx + dy * dy);
+      row += dist <= r - 1.1 ? fill : dist <= r ? 'k' : '.';
+    }
+    rows.push(row);
+  }
+  return rows;
+}
+Object.assign(ALL, { FISH, DONUT, COOKIE, ACORN });

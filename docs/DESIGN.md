@@ -1,6 +1,6 @@
 # Design Document: The Pebbleton Detective Agency
 
-Status: v0.3. Case 3 slice built. Open questions are marked `[?]`.
+Status: v0.4. Case 3 rebuilt with five locations and a suspect board. Open questions are marked `[?]`.
 
 ## 1. Goal
 
@@ -77,46 +77,48 @@ and harder numbers (within 100, two-digit addition). Not built in v1.
 
 ### Case structure
 
-Every case follows the same five steps.
+Every case follows the same steps. Target: about 15 minutes, resumable after any location.
 
 1. **Case intro.** Pixel comic, 3 to 5 panels, speech bubbles. Pip delivers
-   the case. Bart explains it. Tap to advance.
-2. **Investigate.** Pixel-art town map. Three locations light up. Tap one to
-   travel. Each location runs one mini-game.
+   the case. Bart names four suspects. Tap to advance.
+2. **Investigate.** Pixel-art town map. Five locations light up. Tap one to
+   travel. Each location runs one mini-game: one short panel before, one or
+   two after. Locations use different games (the case's own skill plus review).
 3. **Clue.** Winning a mini-game earns a clue card. Cards go in the notebook.
-4. **Deduce.** With three clues, Bart asks "So what happened?" The player picks
-   one of three explanations. All three are funny. Only one fits the clues.
-   Wrong pick: Bart points at the clue that rules it out. Try again.
-5. **Case closed.** Comic scene. Client hands over a map piece. Stamp on the
-   case file. Back to the office.
+   Three of the five clues each clear one suspect. The other two point at the method.
+4. **Deduce, step one: who.** Four suspect cards with a theory each. Wrong
+   pick: Bart names the clue that clears them, and the card is stamped CLEARED.
+5. **Deduce, step two: how.** Three explanations. Only one fits the clues.
+6. **Case closed.** Comic scene. Client hands over a map piece. Back to the office.
 
-Time budget per case: about 15 minutes. Can stop and resume at any step.
+The suspect board also appears in the notebook while a case is open, with cleared suspects greyed out.
 
 ## 3. Mini-games
 
-Each mini-game is a self-contained module. Each has three levels. The game
-picks the level from the player's mastery record (see section 5).
+Each mini-game is a self-contained module with four levels. The game picks
+the level from the player's mastery record (see section 5). Levels 1 and 2
+show pictures. Levels 3 and 4 hide them until the card is tapped.
 
-| Game | Skill | Level 1 | Level 2 | Level 3 | Input |
-|---|---|---|---|---|---|
-| Count the Pile | Counting | 1 to 10 | 1 to 20 | 20 to 100 in groups of 10 | Tap number |
-| More or Less | Compare | Two piles, pick bigger | Two numbers | Use >, <, = | Tap |
-| Jars of Ten | Place value | Fill a jar of 10 | Read tens and ones | Build a number | Tap acorn into jar |
-| Clock Fixer | Time | Set hour hand | Set both to o'clock | Half hours | Tap hour marks |
-| Order Up | Addition | Sums to 5 | Sums to 10 | Sums to 20 | Tap muffins onto tray |
-| Who Ate It | Subtraction | Within 5 | Within 10 | Within 20 | Tap answer |
-| Coin Purse | Money | Name coins | Count pennies and nickels | Make an amount with mixed coins | Tap coins |
-| Paint the Pattern | Patterns | AB | ABC, AAB | Growing patterns | Tap next tile |
-| Shape Sorter | Shapes | Circle, square, triangle | Rectangle, hexagon | Cube, sphere, cone, cylinder | Tap bin |
-| Plank Picker | Measurement | Longer or shorter | Order three lengths | Measure with paperclips | Tap plank |
-| Tally Time | Data | Count tallies | Read picture graph | Build a graph | Tap |
-| Skip Hop | Skip counting | By 10s | By 5s | By 2s | Tap stepping stones |
+| Game | Skill | Level 1 | Level 2 | Level 3 | Level 4 | Input |
+|---|---|---|---|---|---|---|
+| Order Up | Addition | Sums to 10 | Sums 11 to 20 | Missing addend, three addends | Two-digit plus one-digit; some subtraction within 20 | Keypad |
+| Who Ate It | Subtraction | Within 10 | Within 20 | Missing part (10 - ? = 4) | Two-digit minus one-digit; some addition | Keypad |
+| Coin Purse | Money | Pennies and nickels to 10c | Dimes and pennies to 30c | All coins to 60c | Pay a price with any coins | Keypad, then coin tray |
+| Count the Pile | Counting | 1 to 10 | 11 to 20 | 20 to 50 in groups of 10 | 50 to 100 | Keypad |
+| More or Less | Compare | Two piles | Two numbers to 20 | Use >, <, = | Two-digit numbers | Tap |
+| Jars of Ten | Place value | Fill a jar of 10 | Read tens and ones | Build a number | Tens and ones to 99 | Tap |
+| Clock Fixer | Time | Pick the o'clock | Read o'clock | Half hours | Read half hours | Tap |
+| Paint the Pattern | Patterns | AB | ABC, AAB | Growing patterns | Number patterns | Tap next tile |
+| Shape Sorter | Shapes | Circle, square, triangle | Rectangle, hexagon | Cube, sphere, cone, cylinder | Sides and corners | Tap bin |
+| Plank Picker | Measurement | Longer or shorter | Order three lengths | Measure with units | Compare with units | Tap plank |
+| Tally Time | Data | Count tallies | Read picture graph | Most and least | How many more | Tap or keypad |
+| Skip Hop | Skip counting | By 10s | By 5s | By 2s | Mixed, backwards | Keypad |
 
 Rules for all games:
 - Touch targets at least 64 by 64 CSS pixels.
-- No drag required. Tap to pick up, tap to place. Drag is a bonus, not needed.
-- Wrong answer: gentle sound, the character gives a hint, try again. No lives.
-- Three correct answers in a row wins the round.
+- No drag required. Tap only.
+- Wrong answer: gentle sound, the character gives a hint, pictures appear, try again. No lives.
+- Three correct answers in a row wins the location.
 - Every round is generated from a seeded random source. No fixed question lists.
 
 ## 4. Return play
@@ -135,9 +137,9 @@ The story alone is about 8 sessions. These features make it last longer.
 
 ## 5. Adaptive difficulty
 
-Per mini-game, store: current level (1 to 3), correct streak, wrong streak.
+Per mini-game, store: current level (1 to 4), correct streak, wrong streak.
 
-- Five correct in a row at a level: streak resets, level goes up (max 3). Three in a row wins a location, so a level-up takes about two locations.
+- Five correct in a row at a level: streak resets, level goes up (max 4). Three in a row wins a location, so a level-up takes about two locations.
 - Two wrong in a row: level goes down (min 1). Streak resets.
 - Case story rounds use the stored level.
 - Parent screen can lock a minimum or maximum level.

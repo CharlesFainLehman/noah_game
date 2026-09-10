@@ -1,5 +1,5 @@
 // Adaptive difficulty. Pure; safe to import in node tests.
-export const MIN_LEVEL = 1, MAX_LEVEL = 3;
+export const MIN_LEVEL = 1, MAX_LEVEL = 4;
 export const UP_STREAK = 5;    // correct in a row to level up
 export const DOWN_STREAK = 2;  // wrong in a row to level down
 

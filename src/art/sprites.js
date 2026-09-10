@@ -23,6 +23,15 @@ export function sprites() {
     clueMirror: sprite(R.MIRROR, { k: P.k, b: '#c58b4a', s: '#cfe9ff', w: P.w }),
     cluePiece: sprite(R.PIECE, { k: P.k, p: '#f6e2c0', b: '#8b5a2b', r: P.red }),
     glass: sprite(R.GLASS, { k: P.k, s: P.sky, w: P.w, b: P.wood }),
+    fish: sprite(R.FISH, { k: P.k, s: '#7fd1f5', b: '#3d8fb8', w: P.w }),
+    donut: sprite(R.DONUT, { k: P.k, p: '#e8a35b' }),
+    donutPink: sprite(R.DONUT, { k: P.k, p: P.pink }),
+    cookie: sprite(R.COOKIE, { k: P.k, c: '#d9a066', d: P.choc }),
+    acorn: sprite(R.ACORN, { k: P.k, d: P.woodDark, a: '#c58b4a' }),
+    penny: sprite(R.circleRows(10), { k: P.k, c: '#c8763a' }),
+    nickel: sprite(R.circleRows(12), { k: P.k, c: '#c9ced6' }),
+    dime: sprite(R.circleRows(9), { k: P.k, c: '#dfe4ea' }),
+    quarter: sprite(R.circleRows(14), { k: P.k, c: '#c9ced6' }),
   };
   return cache;
 }
@@ -30,4 +39,9 @@ export function sprites() {
 export function clueSprite(icon) {
   const S = sprites();
   return { slip: S.clueSlip, wall: S.clueWall, mirror: S.clueMirror, piece: S.cluePiece }[icon];
+}
+
+export function itemSprite(name) {
+  const S = sprites();
+  return { muffin: S.muffinBlue, muffin2: S.muffinChoc, fish: S.fish, donut: S.donut, donut2: S.donutPink, cookie: S.cookie, acorn: S.acorn }[name] || S.muffinBlue;
 }

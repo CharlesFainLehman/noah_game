@@ -5,8 +5,10 @@ import { comic } from './comic.js';
 import { townMap } from './map.js';
 import { deduction } from './deduction.js';
 import { orderUp } from '../games/orderup.js';
+import { whoAte } from '../games/whoate.js';
+import { coinPurse } from '../games/coins.js';
 
-const GAMES = { orderUp };
+const GAMES = { orderUp, whoAte, coins: coinPurse };
 
 export function startCase(c) {
   const st = caseState(c.id);
@@ -35,15 +37,12 @@ function investigate(c) {
 
 function playLocation(c, loc) {
   const st = caseState(c.id);
-  const game = GAMES[c.game];
-  go(comic(loc.before, () => go(game({
-    customer: loc.customer,
-    onDone: () => go(comic(loc.after, () => {
-      if (!st.clues.includes(loc.clue.id)) st.clues.push(loc.clue.id);
-      commit();
-      investigate(c);
-    })),
-  }))));
+  const game = GAMES[loc.game];
+  go(comic(loc.before, () => go(game(loc, () => go(comic(loc.after, () => {
+    if (!st.clues.includes(loc.clue.id)) st.clues.push(loc.clue.id);
+    commit();
+    investigate(c);
+  }))))));
 }
 
 function deduce(c) {

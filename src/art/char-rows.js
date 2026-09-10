@@ -73,6 +73,10 @@ export const PARTS = {
   teeth: { x: 13, y: 24, rows: ['kwwkwwk', 'kwwkwwk', '.kkkkk.'] },
   beakGoose: { x: 11, y: 19, rows: ['.kkkkkkkk.', 'kggggggggk', 'kggggggggk', '.kkkkkkkk.', '.kggggggk.', '..kkkkkk..'] },
   beakSmall: { x: 14, y: 20, rows: ['.kk.', 'kggk', '.kk.'] },
+  beakLong: { x: 13, y: 19, rows: ['kkkkkk', 'kggggk', '.kggk.', '.kggk.', '.kggk.', '.kggk.', '..kk..'] },
+  facePatch: { x: 7, y: 12, rows: ['..wwwwwwwwwwwwww..', '.wwwwwwwwwwwwwwww.', 'wwwwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwwwww', '.wwwwwwwwwwwwwwww.', '..wwwwwwwwwwwwww..'] },
+  bowtie: { x: 11, y: 28, rows: ['kk......kk', 'krrkkkkrrk', 'krrrkkrrrk', 'krrkkkkrrk', 'kk......kk'] },
+  shell: { x: 2, y: 26, rows: ['........kkkkkkkkkkkk........', '.....kkkddddddddddddkkk.....', '...kkddddddddddddddddddkk...', '..kddddddddddddddddddddddk..', '.kddddddddddddddddddddddddk.', '.kddddddddddddddddddddddddk.', 'kddddddddddddddddddddddddddk', 'kddddddddddddddddddddddddddk', 'kddddddddddddddddddddddddddk', '.kddddddddddddddddddddddddk.', '.kddddddddddddddddddddddddk.', '..kddddddddddddddddddddddk..', '...kkddddddddddddddddddkk...', '.....kkkkkkkkkkkkkkkkkk.....'] },
   whiskerL: { x: 2, y: 20, rows: ['....kk..', 'kkkk....', '........', 'kkkk....', '....kk..'] },
   whiskerR: { x: 22, y: 20, rows: ['..kk....', '....kkkk', '........', '....kkkk', '..kk....'] },
   stripes: { x: 11, y: 11, rows: ['dd..dd..dd', 'dd..dd..dd', 'dd..dd..dd'] },
@@ -98,6 +102,9 @@ export const SPECIES = {
   rabbit:   { label: 'Rabbit',      h: '#c9c6d9', b: '#c9c6d9', y: '#ffffff', f: '#ffffff', i: '#f6b8c8', p: '#f08aa8', behind: ['earLongL', 'earLongR'], front: ['nosePink', 'teeth', 'whiskerL', 'whiskerR'] },
   hedgehog: { label: 'Hedgehog',    h: '#e8caa0', b: '#c99a63', y: '#f5e6cc', f: '#f5e6cc', i: '#f5e6cc', s: '#6f4a2a', behind: ['spikes'], front: ['earRoundL', 'earRoundR', 'noseDark'] },
   cat:      { label: 'Cat',         h: '#f2a33a', b: '#f2a33a', y: '#fff2dc', f: '#fff2dc', i: '#f6b8c8', p: '#f08aa8', d: '#c67a1c', o: '#f2a33a', behind: ['tailBushy', 'earPointL', 'earPointR'], front: ['stripes', 'nosePink', 'whiskerL', 'whiskerR'] },
+  heron:    { label: 'Ms. Heron',   h: '#9fb3c8', b: '#8fa3b8', y: '#dfe6ee', f: '#f0842c', g: '#f0842c', behind: [], front: ['beakLong', 'glasses'], beak: true },
+  penguin:  { label: 'Mayor Waddlesworth', h: '#2f3342', b: '#2f3342', y: '#ffffff', f: '#f0842c', g: '#f0842c', r: '#e0453b', behind: [], front: ['facePatch', 'beakSmall', 'bowtie'], beak: true },
+  turtle:   { label: 'Captain Mabel', h: '#7fb069', b: '#7fb069', y: '#cfe3a8', f: '#cfe3a8', d: '#8b5a2b', behind: ['shell'], front: ['noseDark', 'glasses'] },
   raccoon:  { label: 'Nibbles',     h: '#a5a5a5', b: '#8e8e8e', y: '#d8d8d8', f: '#d8d8d8', i: '#d8d8d8', d: '#3a3a3a', o: '#8e8e8e', behind: ['tailBushy'], front: ['earRoundL', 'earRoundR', 'mask', 'noseDark'] },
 };
 

@@ -24,9 +24,10 @@ export function pixelCharacter(species, expr = 'normal') {
 
   for (const n of S.behind) put(n);
   ctx.drawImage(sprite(BASE, P), 0, 0);
-  // Face
-  const frontMouthless = S.front.filter(n => n !== 'muzzle');
-  if (S.front.includes('muzzle')) put('muzzle');
+  // Face: some parts go under the eyes
+  const underEyes = ['muzzle', 'mask', 'facePatch'];
+  const frontMouthless = S.front.filter(n => !underEyes.includes(n));
+  for (const n of S.front.filter(n => underEyes.includes(n))) put(n);
   put('eyeL'); put('eyeR');
   if (S.sleepy && expr !== 'surprised' && expr !== 'happy') { put('lidL'); put('lidR'); }
   if (expr === 'sad') { put('browSadL'); put('browSadR'); }
@@ -49,5 +50,14 @@ export function iconCanvas(img, scale) {
   const x = c.getContext('2d');
   x.imageSmoothingEnabled = false;
   x.drawImage(img, 0, 0, c.width, c.height);
+  return c;
+}
+
+// Head only (top 28 rows), for suspect cards.
+export function portrait(species, expr = 'normal') {
+  const full = pixelCharacter(species, expr);
+  const c = document.createElement('canvas');
+  c.width = CW; c.height = 28;
+  c.getContext('2d').drawImage(full, 0, 0, CW, 28, 0, 0, CW, 28);
   return c;
 }

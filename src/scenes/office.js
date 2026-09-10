@@ -1,7 +1,7 @@
 // The agency office: hub screen with the case board.
 import { Pixel } from '../engine/pixel.js';
 import { div, button, bubble } from '../engine/ui.js';
-import { pixelCharacter, iconCanvas, CH } from '../art/pixel-characters.js';
+import { pixelCharacter, portrait, iconCanvas, CH } from '../art/pixel-characters.js';
 import { drawBackdrop } from '../art/pixel-backdrops.js';
 import { sprites, clueSprite } from '../art/sprites.js';
 import { save, commit, caseState } from '../engine/save.js';
@@ -61,21 +61,35 @@ function openNotebook(root) {
   for (const c of Object.values(CASE_DATA)) for (const loc of c.locations) {
     if (caseState(c.id).clues.includes(loc.clue.id)) clues.push(loc.clue);
   }
-  const row = div('', { display: 'flex', gap: '16px', flexWrap: 'wrap', minHeight: '120px' });
+  const row = div('', { display: 'flex', gap: '10px', flexWrap: 'wrap', minHeight: '70px' });
   if (!clues.length) row.textContent = 'No clues yet. Solve puzzles to find clues.';
   for (const cl of clues) {
-    const item = div('', { textAlign: 'center', width: '150px', fontSize: '18px', display: 'flex', flexDirection: 'column', alignItems: 'center' });
-    item.append(iconCanvas(clueSprite(cl.icon), 5), div('', {}, cl.title)); row.append(item);
+    const item = div('', { textAlign: 'center', width: '124px', fontSize: '15px', lineHeight: '1.1', display: 'flex', flexDirection: 'column', alignItems: 'center' });
+    item.append(iconCanvas(clueSprite(cl.icon), 3), div('', {}, cl.title)); row.append(item);
   }
   p.append(row);
-  const h = document.createElement('h2'); h.textContent = 'Map pieces'; p.append(h);
-  const pr = div('', { display: 'flex', gap: '10px' });
+  // Suspects for open cases
+  for (const c of Object.values(CASE_DATA)) {
+    const st = caseState(c.id);
+    if (st.status !== 'open' || !c.suspects) continue;
+    const h = document.createElement('h2'); h.textContent = 'Suspects'; h.style.marginTop = '8px'; p.append(h);
+    const sr = div('', { display: 'flex', gap: '10px' });
+    for (const s of c.suspects) {
+      const cleared = s.clearedBy && st.clues.includes(s.clearedBy);
+      const card = div('', { width: '160px', textAlign: 'center', fontSize: '15px', lineHeight: '1.1', opacity: cleared ? .45 : 1, display: 'flex', flexDirection: 'column', alignItems: 'center' });
+      card.append(iconCanvas(portrait(s.species), 2), div('', { fontWeight: 'bold' }, s.name), div('', {}, cleared ? 'CLEARED' : s.theory));
+      sr.append(card);
+    }
+    p.append(sr);
+  }
+  const h = document.createElement('h2'); h.textContent = 'Map pieces'; h.style.marginTop = '8px'; p.append(h);
+  const pr = div('', { display: 'flex', gap: '8px' });
   for (let i = 1; i <= 8; i++) {
-    const slot = div('', { width: '70px', height: '70px', border: '3px dashed #8b5a2b', background: save.mapPieces.includes(i) ? '#f6e2c0' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' });
-    if (save.mapPieces.includes(i)) slot.append(iconCanvas(clueSprite('piece'), 4));
+    const slot = div('', { width: '56px', height: '56px', border: '3px dashed #8b5a2b', background: save.mapPieces.includes(i) ? '#f6e2c0' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' });
+    if (save.mapPieces.includes(i)) slot.append(iconCanvas(clueSprite('piece'), 3));
     pr.append(slot);
   }
   p.append(pr);
-  p.append(button('Close', { x: 560, y: 380, cls: 'small', onTap: () => p.remove() }));
+  p.append(button('Close', { x: 600, y: 392, cls: 'small', onTap: () => p.remove() }));
   root.append(p);
 }

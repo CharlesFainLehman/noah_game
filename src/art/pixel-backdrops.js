@@ -101,6 +101,38 @@ export function drawBackdrop(px, name) {
       for (let j = 0; j < 5; j++) for (let i = 0; i < 20; i++) px.rect(i * 18 + (j % 2) * 9, 130 + j * 10, 14, 6, '#b9bfc9');
       break;
     }
+    case 'school': {
+      px.clear('#f1e6c8'); stripes(px, '#e9dcb8', 8, 32, 120);
+      px.rect(0, 120, PW, 6, P.woodDark); px.rect(0, 126, PW, PH - 126, '#c9a26a');
+      for (let i = 0; i < PW; i += 32) px.rect(i, 126, 1, PH - 126, '#a5824f');
+      // Chalkboard
+      px.box(40, 14, 200, 70, '#2f6b4f'); px.rect(40, 84, 200, 4, P.woodDark);
+      px.text('2 + 3 = 5', 140, 30, '#f5f0d8', { align: 'center', scale: 2 });
+      px.text('10 9 8 7 6 5', 140, 58, '#f5f0d8', { align: 'center' });
+      // Desks
+      for (const x of [20, 120, 220]) { px.box(x, 132, 60, 8, P.woodDark); px.rect(x + 4, 140, 4, 22, P.woodDark); px.rect(x + 52, 140, 4, 22, P.woodDark); }
+      // Clock and flag
+      px.box(262, 20, 24, 24, P.w); px.rect(273, 24, 2, 8, P.k); px.rect(273, 31, 6, 2, P.k);
+      px.rect(290, 30, 2, 40, P.woodDark); px.rect(292, 30, 18, 12, P.red); px.rect(292, 30, 8, 6, P.blue);
+      break;
+    }
+    case 'clock': {
+      px.clear('#b9b3a6'); stripes(px, '#aaa497', 6, 18, 130);
+      px.rect(0, 130, PW, 50, '#7d786f');
+      for (let i = 0; i < PW; i += 26) px.rect(i, 130, 1, 50, '#5d6470');
+      // Big clock face from behind (round window)
+      px.rect(196, 14, 110, 110, P.k); px.rect(200, 18, 102, 102, '#f5f0d8');
+      px.rect(249, 20, 4, 8, P.k); px.rect(249, 110, 4, 8, P.k); px.rect(202, 67, 8, 4, P.k); px.rect(292, 67, 8, 4, P.k);
+      px.rect(249, 40, 4, 32, P.k); px.rect(249, 67, 30, 4, P.k); px.rect(247, 65, 8, 8, P.k);
+      // Gears
+      for (const [x, y, r] of [[40, 40, 22], [90, 80, 16], [130, 36, 12]]) {
+        px.rect(x - r, y - 4, r * 2, 8, '#8b5a2b'); px.rect(x - 4, y - r, 8, r * 2, '#8b5a2b');
+        px.rect(x - r + 4, y - r + 4, r * 2 - 8, r * 2 - 8, '#c58b4a'); px.rect(x - 3, y - 3, 6, 6, P.k);
+      }
+      // Stairs
+      for (let i = 0; i < 6; i++) px.box(i * 22, 130 - i * 8 + 40, 24, 8, '#a5a5a5');
+      break;
+    }
     default:
       px.clear(P.sky);
   }
