@@ -1,7 +1,7 @@
 // Two steps: pick the suspect, then pick how they did it.
 import { Pixel } from '../engine/pixel.js';
 import { div, bubble } from '../engine/ui.js';
-import { pixelCharacter, CH } from '../art/pixel-characters.js';
+import { pixelCharacter, CH, idle } from '../art/pixel-characters.js';
 import { iconCanvas } from '../art/pixel-characters.js';
 import { suspectIcon } from './office.js';
 import { drawBackdrop } from '../art/pixel-backdrops.js';
@@ -12,12 +12,16 @@ import { sfx } from '../engine/audio.js';
 import { fmt } from './comic.js';
 
 export function deduction(c, onSolved) {
+  let t = 0;
   return {
+    update(dt) { t += dt; if (this.paint) this.paint(t); },
     exit() { window.__ded = null; },
     enter(root) {
       const px = new Pixel(root);
-      const drawBart = expr => { drawBackdrop(px, 'office'); px.blit(pixelCharacter('basset', expr), 8, 176 - CH * 3, 3); };
-      drawBart('normal');
+      let bartExpr = 'normal';
+      const drawBart = expr => { bartExpr = expr; };
+      this.paint = t => { drawBackdrop(px, 'office', { t }); const { frame, bob } = idle(t); px.blit(pixelCharacter('basset', bartExpr, frame), 10, 176 - CH * 2 + bob, 2); };
+      this.paint(0);
       const found = caseState(c.id).clues;
 
       let bub;

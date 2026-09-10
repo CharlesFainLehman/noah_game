@@ -11,7 +11,7 @@ Decisions so far:
 
 | Item | Decision |
 |---|---|
-| Art | All pixel art. Characters are 32x48 sprites built from shared parts. Scenes are 320x180 scaled 3x. |
+| Art | All pixel art. Characters are 40x56 sprites drawn procedurally with shading and idle animation. Scenes are 320x180 scaled 3x, with small animations. |
 | Device | Tablet and laptop. Touch first. Mouse works. |
 | Reading | Reads well. Short sentences on screen. Optional voice. |
 | Story | Detective agency in a small animal town. |
@@ -174,8 +174,10 @@ Parent screen is gated by a hold-to-open button (hold for 3 seconds).
 - Pixel art: sprites defined as text grids in JavaScript. Each character is a
   palette index. Rendered once to an offscreen canvas. Drawn with image
   smoothing off.
-- Characters: one shared 32x48 body template plus per-animal parts (ears, muzzle,
-  tail, hat, accessories) and swappable eyes and mouths for expressions. Composed once and cached.
+- Characters: drawn procedurally at 40x56 from shaded shapes (top-left light, bottom-right shade),
+  with per-animal ears, muzzle, tail, hat and props, four expressions, a blink frame, and a bob. Cached per species and expression.
+- Backdrops: wallpaper patterns, wainscot, plank or tile floors, windows with curtains and a live view,
+  shaded furniture with drop shadows, and animated details (clouds, waves, gears, steam, lighthouse beam).
 - Speech bubbles, buttons, and cards are HTML with square corners and hard shadows so they sit with the pixel art.
 - Scenes: a small scene stack. Each scene has `enter`, `update`, `draw`, `exit`.
 - Save: one JSON object in localStorage, with a version number. Export and
@@ -207,7 +209,7 @@ docs/              this document
 4. ~~Comic scene and deduction scene. Case 3 complete.~~ Done.
 5. ~~Remaining mini-games. Cases 1, 2, 4 through 8.~~ Done.
 6. ~~Daily Case File, badges, office upgrades.~~ Done.
-7. Art pass. Sound.
+7. ~~Art pass.~~ Done. Sound polish still open.
 8. ~~Parent screen. Export and import save.~~ Done.
 
 ## 10. Decided

@@ -1,7 +1,7 @@
 // Story panels: pixel backdrop, one character, one speech bubble. Tap to advance.
 import { Pixel } from '../engine/pixel.js';
 import { div, bubble } from '../engine/ui.js';
-import { pixelCharacter, SPECIES, CW, CH } from '../art/pixel-characters.js';
+import { pixelCharacter, SPECIES, CW, CH, idle } from '../art/pixel-characters.js';
 import { drawBackdrop } from '../art/pixel-backdrops.js';
 import { save } from '../engine/save.js';
 import { sfx } from '../engine/audio.js';
@@ -16,7 +16,7 @@ export function speaker(who) {
 }
 
 export function comic(panels, onDone) {
-  let i = 0, root = null, lastTap = 0, px = null;
+  let i = 0, root = null, lastTap = 0, px = null, t = 0, cur = null;
 
   function show() {
     root.innerHTML = '';
@@ -24,8 +24,8 @@ export function comic(panels, onDone) {
     const sp = speaker(p.who);
     const right = p.side === 'right';
     px = new Pixel(root);
-    drawBackdrop(px, p.bg);
-    px.blit(pixelCharacter(sp.species, p.expr), right ? 320 - 16 - CW * 3 : 16, 176 - CH * 3, 3);
+    cur = { bg: p.bg, species: sp.species, expr: p.expr, right };
+    paint();
     const b = bubble(sp.label, fmt(p.text), right ? { x: 40, y: 40, w: 520, side: 'right' } : { x: 400, y: 40, w: 520, side: 'left' });
     b.classList.add('pop');
     root.append(b);
@@ -35,7 +35,15 @@ export function comic(panels, onDone) {
     root.append(div('hint', { right: '24px', bottom: '16px' }, 'Tap to continue ▶'));
   }
 
+  function paint() {
+    if (!px || !cur) return;
+    drawBackdrop(px, cur.bg, { t });
+    const { frame, bob } = idle(t);
+    px.blit(pixelCharacter(cur.species, cur.expr, frame), cur.right ? 320 - 16 - CW * 2 : 16, 176 - CH * 2 + bob, 2);
+  }
+
   return {
+    update(dt) { t += dt; paint(); },
     enter(r) {
       root = r;
       root.addEventListener('pointerdown', e => {

@@ -1,7 +1,7 @@
 // The agency office: hub screen with the case board, notebook, daily case, decor shop, parent screen.
 import { Pixel } from '../engine/pixel.js';
 import { div, button, bubble } from '../engine/ui.js';
-import { pixelCharacter, portrait, iconCanvas, CH } from '../art/pixel-characters.js';
+import { pixelCharacter, portrait, iconCanvas, CH, idle } from '../art/pixel-characters.js';
 import { drawBackdrop, DECOR } from '../art/pixel-backdrops.js';
 import { sprites, clueSprite } from '../art/sprites.js';
 import { save, commit, caseState, mastery } from '../engine/save.js';
@@ -19,19 +19,25 @@ export function suspectIcon(s, scale = 3) {
 }
 
 export function office(greeting) {
+  let t = 0;
   return {
+    update(dt) { t += dt; if (this.paint) this.paint(t); },
     enter(root) {
       const S = sprites();
       const px = new Pixel(root);
       const closed = CASES.filter(c => caseState(c.id).status === 'closed').length;
       const gold = Object.keys(GAME_NAMES).filter(g => save.mastery[g] && isMastered(save.mastery[g])).length;
-      drawBackdrop(px, 'office', { decor: save.decor, trophies: closed, gold });
-      px.blit(pixelCharacter(save.player.avatar, 'happy'), 96, 174 - CH * 2, 2);
-      px.blit(pixelCharacter('basset', closed === 8 ? 'happy' : 'normal'), 252, 174 - CH * 2, 2);
+      this.paint = t => {
+        drawBackdrop(px, 'office', { decor: save.decor, trophies: closed, gold, t });
+        const a = idle(t), b = idle(t, 1.7);
+        px.blit(pixelCharacter(save.player.avatar, 'happy', a.frame), 56, 174 - CH * 2 + a.bob, 2);
+        px.blit(pixelCharacter('basset', closed === 8 ? 'happy' : 'normal', b.frame), 236, 174 - CH * 2 + b.bob, 2);
+      };
+      this.paint(0);
 
       const say = t => {
         root.querySelectorAll('.bubble').forEach(b => b.remove());
-        const b = bubble('Bart', t, { x: 440, y: 290, w: 300, side: 'right' });
+        const b = bubble('Bart', t, { x: 410, y: 290, w: 280, side: 'right' });
         b.style.fontSize = '24px';
         b.classList.add('pop'); root.append(b);
       };
