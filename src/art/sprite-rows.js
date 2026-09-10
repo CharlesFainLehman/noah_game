@@ -248,3 +248,37 @@ export function circleRows(d, fill = 'c') {
   return rows;
 }
 Object.assign(ALL, { FISH, DONUT, COOKIE, ACORN });
+
+export const BARREL = [
+  '..kkkkkkkkkkkk..',
+  '.kddddddddddddk.',
+  'kbbbbbbbbbbbbbbk',
+  'kddddddddddddddk',
+  'kdddddkddddddddk',
+  'kddddddddddddddk',
+  'kbbbbbbbbbbbbbbk',
+  'kddddddddddddddk',
+  'kddddddddkdddddk',
+  'kddddddddddddddk',
+  'kbbbbbbbbbbbbbbk',
+  'kddddddddddddddk',
+  '.kddddddddddddk.',
+  '.kdddddkkddddkk.',
+  '..kkkkk..kkkkk..',
+  '................',
+];
+export const TROPHY = [
+  '............',
+  '.kkkkkkkkkk.',
+  'kkyyyyyyyykk',
+  'kykyyyyyykyk',
+  'kykyyyyyykyk',
+  '.kkyyyyyykk.',
+  '...kyyyyk...',
+  '....kyyk....',
+  '.....kk.....',
+  '....kyyk....',
+  '..kkyyyykk..',
+  '..kkkkkkkk..',
+];
+Object.assign(ALL, { BARREL, TROPHY });

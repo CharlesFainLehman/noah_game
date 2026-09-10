@@ -4,11 +4,7 @@ import { save, commit, caseState } from '../engine/save.js';
 import { comic } from './comic.js';
 import { townMap } from './map.js';
 import { deduction } from './deduction.js';
-import { orderUp } from '../games/orderup.js';
-import { whoAte } from '../games/whoate.js';
-import { coinPurse } from '../games/coins.js';
-
-const GAMES = { orderUp, whoAte, coins: coinPurse };
+import { GAMES } from '../games/games.js';
 
 export function startCase(c) {
   const st = caseState(c.id);

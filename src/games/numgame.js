@@ -6,12 +6,14 @@ import { sprites, itemSprite } from '../art/sprites.js';
 import { pixelCharacter, CH } from '../art/pixel-characters.js';
 import { drawBackdrop } from '../art/pixel-backdrops.js';
 import { makeRng } from '../engine/rng.js';
-import { mastery, commit } from '../engine/save.js';
-import { record } from '../engine/mastery.js';
+import { save, mastery, commit } from '../engine/save.js';
+import { record, clampLevel } from '../engine/mastery.js';
 import { sfx } from '../engine/audio.js';
+import { drawRods, drawPile, drawJar, drawStones } from './draw.js';
+import { fitScale } from '../art/font.js';
 
 export const WIN = 3; // correct in a row to finish a location
-export const FEET = { bakery: 112, harbor: 136, store: 134, school: 126, clock: 130, office: 174, street: 130 };
+export const FEET = { bakery: 112, harbor: 136, store: 134, school: 126, clock: 130, office: 174, street: 130, studio: 128, workshop: 124, lighthouse: 134 };
 
 export const GOOD = ['DING! THAT IS RIGHT!', 'PERFECT!', 'YES! WELL DONE!'];
 export const BAD = ['HMM. COUNT AGAIN.', 'NOT QUITE. TRY AGAIN.'];
@@ -56,6 +58,11 @@ function drawBig(px, n, x, y, color) {
 export function drawPictures(px, q, item, item2, t) {
   const S = sprites(), a = itemSprite(item), b = itemSprite(item2);
   const size = 14, perRow = 10;
+  if (q.kind === 'count') { drawPile(px, q.n, item, 74, 20, 172); return; }
+  if (q.kind === 'fill') { drawJar(px, q.k, 76, 23); return; }
+  if (['rods', 'tens', 'ones'].includes(q.kind)) { drawRods(px, q.n, 90, 20); return; }
+  if (q.kind === 'build') { drawRods(px, q.t * 10 + q.o, 90, 20); return; }
+  if (q.kind === 'skip') { drawStones(px, q.seq, 74, 22, 172); return; }
   if (q.big) {
     // Two-digit: tens rods and ones.
     const x0 = 84;
@@ -94,21 +101,21 @@ export function promptFor(q, fallback) {
   return { missing: 'HOW MANY MORE ARE NEEDED?', add3: 'HOW MANY ALL TOGETHER?', add: 'HOW MANY ALL TOGETHER?', sub: 'HOW MANY ARE LEFT?', missingSub: 'HOW MANY WERE EATEN?' }[q.kind] || fallback;
 }
 
-export function numberGame({ game, gen, bg, who, item, item2 = item, title, prompt, onDone }) {
+export function numberGame({ game, gen, bg, who, item, item2 = item, title, prompt, onDone, alwaysShow = false, maxDigits = 2 }) {
   const rng = makeRng();
   const m = mastery(game);
   let px, q, level, wins = 0, state = 'ask', timer = 0, entry = '', reveal = false, msg = '', t = 0, levelMsg = '';
 
   function newRound() {
-    level = m.level;
+    level = clampLevel(m, save.levelMin, save.levelMax);
     q = gen(level, rng);
-    entry = ''; reveal = level <= 2; state = 'ask'; msg = '';
+    entry = ''; reveal = alwaysShow || level <= 2; state = 'ask'; msg = '';
   }
 
   function answer() {
     if (state !== 'ask' || entry === '') return;
     const ok = Number(entry) === q.answer;
-    const change = record(m, ok);
+    const change = record(m, ok, save.levelMin, save.levelMax);
     commit();
     levelMsg = change === 'up' ? 'LEVEL UP!' : change === 'down' ? 'EASIER NOW' : '';
     if (ok) {
@@ -134,13 +141,15 @@ export function numberGame({ game, gen, bg, who, item, item2 = item, title, prom
     if (reveal) drawPictures(px, q, item, item2, state === 'good' || state === 'done' ? t : undefined);
     else { px.text('TAP HERE TO SEE THEM', 160, 30, P.greyDark, { align: 'center' }); px.hit(70, 4, 180, 78, () => { reveal = true; sfx.tap(); }); }
     const shown = q.text.replace('?', entry === '' ? '?' : entry);
-    px.text(shown, 160, 56, P.k, { align: 'center', scale: 2 });
+    const hasEq = q.text.includes('?');
+    if (hasEq) px.text(shown, 160, 56, P.k, { align: 'center', scale: fitScale(shown, 172, 2) });
+    else px.text(entry === '' ? '?' : entry, 160, 56, P.k, { align: 'center', scale: 2 });
     // Prompt or message
-    if (state === 'ask') { px.box(60, 84, 200, 20, '#fffdf5'); px.text(promptFor(q, prompt), 160, 90, P.k, { align: 'center' }); }
+    if (state === 'ask') { px.box(60, 84, 200, 20, '#fffdf5'); px.text(q.prompt || promptFor(q, prompt), 160, 90, P.k, { align: 'center' }); }
     else drawMessage(px, state, msg, levelMsg);
     // Keypad
     const pads = drawKeypad(px, {
-      onDigit: n => { if (state === 'ask' && entry.length < 2) { entry += n; sfx.tap(); } },
+      onDigit: n => { if (state === 'ask' && entry.length < maxDigits) { entry += n; sfx.tap(); } },
       onClear: () => { entry = ''; sfx.tap(); },
       onServe: answer,
     });

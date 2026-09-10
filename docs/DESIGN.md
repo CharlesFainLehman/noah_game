@@ -1,6 +1,6 @@
 # Design Document: The Pebbleton Detective Agency
 
-Status: v0.4. Case 3 rebuilt with five locations and a suspect board. Open questions are marked `[?]`.
+Status: v1.0. All eight cases, twelve mini-games, daily case file, badges, decor, parent screen. Open questions are marked `[?]`.
 
 ## 1. Goal
 
@@ -165,7 +165,7 @@ Parent screen is gated by a hold-to-open button (hold for 3 seconds).
   whole-number factors so pixels stay crisp.
 - Touch, mouse, and keyboard (arrows, enter) all work.
 - Sound effects made with Web Audio. No audio files. Mute toggle.
-- No timers on any puzzle in v1. `[?]`
+- No timers on any puzzle in v1.
 
 ## 8. Technical plan
 
@@ -205,10 +205,10 @@ docs/              this document
 2. ~~One mini-game end to end (Order Up). Adaptive logic. Tests.~~ Done.
 3. ~~Office hub and town map. Save and resume.~~ Done.
 4. ~~Comic scene and deduction scene. Case 3 complete.~~ Done.
-5. Remaining mini-games, one at a time. Cases 1, 2, 4 through 8.
-6. Daily Case File, badges, office upgrades.
+5. ~~Remaining mini-games. Cases 1, 2, 4 through 8.~~ Done.
+6. ~~Daily Case File, badges, office upgrades.~~ Done.
 7. Art pass. Sound.
-8. Parent screen. Export and import save.
+8. ~~Parent screen. Export and import save.~~ Done.
 
 ## 10. Decided
 
@@ -219,7 +219,4 @@ docs/              this document
 
 ## 11. Open questions
 
-- `[?]` Session length target. 15 minutes per case proposed.
-- `[?]` Any animals he dislikes or fears? Any he loves that should be in the cast?
-- `[?]` Timed challenges. Proposed: none in v1.
-- `[?]` Skill priorities. Anything to add, remove, or move earlier?
+- None right now.

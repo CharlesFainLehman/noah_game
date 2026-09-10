@@ -5,14 +5,16 @@ import { sprites } from '../art/sprites.js';
 import { sfx } from '../engine/audio.js';
 
 // x,y = top-left of walls; w,h = wall size.
-const TOWN = [
-  { id: 'bakery', name: 'BAKERY', x: 28, y: 36, w: 46, h: 30, wall: '#f6b8c8', roof: P.red, sign: 'muffin' },
+export const TOWN = [
+  { id: 'bakery', name: 'BAKERY', x: 20, y: 36, w: 44, h: 30, wall: '#f6b8c8', roof: P.red, sign: 'muffin' },
+  { id: 'studio', name: 'STUDIO', x: 84, y: 40, w: 40, h: 26, wall: '#dcb8ff', roof: P.blue, sign: 'paint' },
   { id: 'clock', name: 'CLOCK', x: 150, y: 24, w: 24, h: 42, wall: '#e8d6b0', roof: P.greyDark, sign: 'clock' },
-  { id: 'store', name: 'STORE', x: 246, y: 36, w: 46, h: 30, wall: P.yellow, roof: P.green, sign: 'acorn' },
+  { id: 'workshop', name: 'WORKSHOP', x: 190, y: 40, w: 46, h: 26, wall: '#e8c99a', roof: P.woodDark, sign: 'hammer' },
+  { id: 'store', name: 'STORE', x: 254, y: 36, w: 44, h: 30, wall: P.yellow, roof: P.green, sign: 'acorn' },
+  { id: 'fish', name: 'FISH', x: 24, y: 108, w: 46, h: 24, wall: '#f6e2c0', roof: P.blue, sign: 'fish' },
   { id: 'agency', name: 'AGENCY', x: 138, y: 92, w: 48, h: 34, wall: '#c58b4a', roof: P.woodDark, sign: 'glass' },
   { id: 'school', name: 'SCHOOL', x: 236, y: 96, w: 56, h: 30, wall: P.red, roof: P.greyDark, sign: 'book' },
-  { id: 'fish', name: 'FISH', x: 30, y: 108, w: 46, h: 24, wall: '#f6e2c0', roof: P.blue, sign: 'fish' },
-  { id: 'lighthouse', name: '', x: 300, y: 128, w: 14, h: 30, wall: P.w, roof: P.red, sign: 'none' },
+  { id: 'lighthouse', name: 'LIGHT', x: 286, y: 118, w: 14, h: 30, wall: P.w, roof: P.red, sign: 'none' },
 ];
 
 function drawSign(px, kind, cx, cy) {
@@ -24,6 +26,8 @@ function drawSign(px, kind, cx, cy) {
     case 'glass': px.rect(cx - 5, cy - 5, 8, 8, P.k); px.rect(cx - 4, cy - 4, 6, 6, P.sky); px.rect(cx + 3, cy + 3, 3, 3, P.k); break;
     case 'book': px.box(cx - 6, cy - 4, 12, 9, P.blue); px.rect(cx, cy - 3, 1, 7, P.w); break;
     case 'fish': px.rect(cx - 5, cy - 2, 8, 5, P.sky); px.rect(cx + 3, cy - 3, 2, 7, P.sky); px.rect(cx - 3, cy - 1, 1, 1, P.k); break;
+    case 'paint': px.rect(cx - 5, cy - 3, 3, 3, P.red); px.rect(cx - 1, cy - 3, 3, 3, P.blue); px.rect(cx + 3, cy - 3, 3, 3, P.yellow); px.rect(cx - 3, cy + 1, 3, 3, P.green); break;
+    case 'hammer': px.rect(cx - 1, cy - 4, 2, 10, P.woodDark); px.rect(cx - 4, cy - 6, 8, 3, P.greyDark); break;
   }
 }
 
@@ -60,7 +64,7 @@ export function townMap({ caseTitle, locations, found, onPick, onHome }) {
     // Roads
     px.rect(0, 74, PW, 12, P.road); px.rect(156, 20, 12, 130, P.road); px.rect(40, 74, 12, 76, P.road); px.rect(262, 74, 12, 76, P.road);
     // Trees
-    for (const [x, y] of [[100, 30], [120, 44], [206, 30], [96, 120], [210, 130], [230, 20]]) {
+    for (const [x, y] of [[72, 20], [130, 20], [240, 22], [96, 120], [210, 130], [80, 140]]) {
       px.rect(x + 2, y + 6, 2, 4, P.woodDark); px.rect(x, y, 6, 6, P.grassDark); px.rect(x + 1, y - 1, 4, 1, P.grassDark);
     }
     for (const b of TOWN) {

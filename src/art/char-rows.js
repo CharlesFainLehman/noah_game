@@ -89,6 +89,27 @@ export const PARTS = {
   tailBushy: { x: 22, y: 30, rows: ['.......kk.', '.....kkook', '...kkoooWk', '..koooooWk', '..kooooook', '..kkoooook', '....kkkkk.'] },
   tailBig: { x: 24, y: 14, rows: ['..kkkk..', '.kooook.', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', 'kooooook', '.kooook.', '..kkkk..'] },
   hatDeer: { x: 3, y: 4, rows: ['.........kkkkkkkk.........', '.......kkxxxxxxxxkk.......', '.....kkxxxxxxxxxxxxkk.....', '....kxxxxxxxxxxxxxxxxk....', '...kxxxxxxxxxxxxxxxxxxk...', '..kxxxxxxxxxxxxxxxxxxxxk..', 'kkkkkkkkkkkkkkkkkkkkkkkkkk', 'kxxxxxxxxxxxxxxxxxxxxxxxxk', 'kkkkkkkkkkkkkkkkkkkkkkkkkk'] },
+  crest: { x: 12, y: 2, rows: ['k..k..k.', 'kdkkdkkd', '.kdkdkd.', '..kdkd..', '...kk...', '...hh...', '...hh...', '...hh...', '...hh...'] },
+  fan: { x: 0, y: 4, rows: [
+    '............kkkkkkkk............',
+    '.........kkkddddddddkkk.........',
+    '.......kkddddkdddkdddddkk.......',
+    '.....kkdddddkikikidddddddkk.....',
+    '....kdddddddkikikiddddddddk.....',
+    '...kdddkdddddkkkkkdddddkdddk....',
+    '..kddddkikdddddddddddkikddddk...',
+    '..kdddkikikdddddddddkikikdddk...',
+    '.kddddkkkkkddddddddddkkkkkdddk..',
+    '.kddddddddddddddddddddddddddddk.',
+    'kddkdddddddddddddddddddddddkddk.',
+    'kdkikdddddddddddddddddddddkikdk.',
+    'kkikikdddddddddddddddddddkikikk.',
+    'kdkkkddddddddddddddddddddddkkkdk',
+    'kddddddddddddddddddddddddddddddk',
+    'kddddddddddddddddddddddddddddddk',
+    '.kkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.'] },
+  flatTail: { x: 20, y: 30, rows: ['....kkkkkkk.', '..kkdddddddk', '.kddkdkdkddk', 'kdkdkdkdkddk', 'kddkdkdkdddk', '.kdkdkdkddk.', '..kkkkkkkk..'] },
+  hatHard: { x: 4, y: 3, rows: ['.........kkkkkk.........', '.......kkxxxxxxkk.......', '.....kkxxxxxxxxxxkk.....', '....kxxxxxkxxxxxxxxk....', '...kxxxxxxkxxxxxxxxxk...', '..kxxxxxxxkxxxxxxxxxxk..', 'kkkkkkkkkkkkkkkkkkkkkkkk', 'kxxxxxxxxxxxxxxxxxxxxxxk', 'kkkkkkkkkkkkkkkkkkkkkkkk'] },
   hatChef: { x: 8, y: 0, rows: ['...kkkk..kkkk...', '..kwwwwkkwwwwk..', '.kwwwwwwwwwwwwk.', '.kwwwwwwwwwwwwk.', '.kwwwwwwwwwwwwk.', '..kwwwwwwwwwwk..', '...kwwwwwwwwk...', '...kwwwwwwwwk...', '...kwwwwwwwwk...', '...kwwwwwwwwk...', '...kkkkkkkkkk...'] },
 };
 
@@ -105,6 +126,8 @@ export const SPECIES = {
   heron:    { label: 'Ms. Heron',   h: '#9fb3c8', b: '#8fa3b8', y: '#dfe6ee', f: '#f0842c', g: '#f0842c', behind: [], front: ['beakLong', 'glasses'], beak: true },
   penguin:  { label: 'Mayor Waddlesworth', h: '#2f3342', b: '#2f3342', y: '#ffffff', f: '#f0842c', g: '#f0842c', r: '#e0453b', behind: [], front: ['facePatch', 'beakSmall', 'bowtie'], beak: true },
   turtle:   { label: 'Captain Mabel', h: '#7fb069', b: '#7fb069', y: '#cfe3a8', f: '#cfe3a8', d: '#8b5a2b', behind: ['shell'], front: ['noseDark', 'glasses'] },
+  peacock:  { label: 'Priscilla',   h: '#2f9e8f', b: '#2f9e8f', y: '#9fe3d8', f: '#f0842c', g: '#f0842c', d: '#3b6fd6', i: '#ffcc4d', behind: ['fan'], front: ['beakSmall', 'crest'], beak: true },
+  beaver:   { label: 'Bruno',       h: '#8a5a3a', b: '#8a5a3a', y: '#d9b98c', f: '#d9b98c', i: '#d9b98c', m: '#d9b98c', d: '#5a3520', x: '#ffcc4d', behind: ['flatTail'], front: ['earRoundL', 'earRoundR', 'muzzle', 'noseDark', 'teeth'], hat: 'hatHard' },
   raccoon:  { label: 'Nibbles',     h: '#a5a5a5', b: '#8e8e8e', y: '#d8d8d8', f: '#d8d8d8', i: '#d8d8d8', d: '#3a3a3a', o: '#8e8e8e', behind: ['tailBushy'], front: ['earRoundL', 'earRoundR', 'mask', 'noseDark'] },
 };
 

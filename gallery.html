@@ -1,0 +1,17 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#fff}canvas{image-rendering:pixelated;display:block}</style></head>
+<body><div id="stage"></div>
+<script type="module">
+import { Pixel } from './src/engine/pixel.js';
+import { pixelCharacter, SPECIES } from './src/art/pixel-characters.js';
+import { drawBackdrop } from './src/art/pixel-backdrops.js';
+import { townMap } from './src/scenes/map.js';
+const stage=document.getElementById('stage');
+const row=document.createElement('div'); row.style.position='relative'; row.style.height='220px'; stage.append(row);
+const px=new Pixel(row); px.canvas.style.width='960px'; px.canvas.style.height='540px';
+px.clear('#ffffff');
+['peacock','beaver','turtle','heron','penguin'].forEach((k,i)=>{ px.blit(pixelCharacter(k,'happy'),i*40,0,1); });
+for (const b of ['studio','workshop','lighthouse']) { const d=document.createElement('div'); d.style.position='relative'; d.style.height='360px'; d.style.width='640px'; d.style.display='inline-block'; stage.append(d); const p=new Pixel(d); p.canvas.style.width='640px'; p.canvas.style.height='360px'; drawBackdrop(p,b); }
+const d=document.createElement('div'); d.style.position='relative'; d.style.height='360px'; d.style.width='640px'; d.style.display='inline-block'; stage.append(d);
+const m=townMap({caseTitle:'CASE 5',locations:[{id:'studio'},{id:'workshop'},{id:'lighthouse'},{id:'school'},{id:'store'}],found:['school'],onPick(){},onHome(){}});
+m.enter(d); d.querySelector('canvas').style.width='640px'; d.querySelector('canvas').style.height='360px'; m.update(0.1);
+</script></body></html>

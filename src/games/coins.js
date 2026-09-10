@@ -5,8 +5,8 @@ import { sprites } from '../art/sprites.js';
 import { pixelCharacter, CH } from '../art/pixel-characters.js';
 import { drawBackdrop } from '../art/pixel-backdrops.js';
 import { makeRng } from '../engine/rng.js';
-import { mastery, commit } from '../engine/save.js';
-import { record } from '../engine/mastery.js';
+import { save, mastery, commit } from '../engine/save.js';
+import { record, clampLevel } from '../engine/mastery.js';
 import { sfx } from '../engine/audio.js';
 import { genCoins, COIN_VALUE, coinTotal } from './logic.js';
 import { WIN, FEET, GOOD, BAD, drawKeypad, drawStars, drawMessage } from './numgame.js';
@@ -20,12 +20,12 @@ export function coinPurse(loc, onDone) {
   const S = sprites();
   const coin = type => S[type];
 
-  function newRound() { level = m.level; q = genCoins(level, rng); entry = ''; picked = []; reveal = level <= 2; state = 'ask'; msg = ''; }
+  function newRound() { level = clampLevel(m, save.levelMin, save.levelMax); q = genCoins(level, rng); entry = ''; picked = []; reveal = level <= 2; state = 'ask'; msg = ''; }
 
   function check(value) {
     if (state !== 'ask') return;
     const ok = value === q.answer;
-    const change = record(m, ok); commit();
+    const change = record(m, ok, save.levelMin, save.levelMax); commit();
     levelMsg = change === 'up' ? 'LEVEL UP!' : change === 'down' ? 'EASIER NOW' : '';
     if (ok) {
       wins++; sfx.ding();

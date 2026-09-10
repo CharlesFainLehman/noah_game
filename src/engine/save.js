@@ -3,7 +3,7 @@ import { newMastery } from './mastery.js';
 const KEY = 'pebbleton.save.v1';
 
 export function defaultSave() {
-  return { version: 1, player: null, cases: {}, mastery: {}, mapPieces: [], badges: 0, muted: false };
+  return { version: 1, player: null, cases: {}, mastery: {}, mapPieces: [], badges: 0, muted: false, daily: { date: '', streak: 0 }, decor: [], levelMin: 1, levelMax: 4 };
 }
 
 function load() {

@@ -1,7 +1,9 @@
 // Two steps: pick the suspect, then pick how they did it.
 import { Pixel } from '../engine/pixel.js';
 import { div, bubble } from '../engine/ui.js';
-import { pixelCharacter, portrait, iconCanvas, CH } from '../art/pixel-characters.js';
+import { pixelCharacter, CH } from '../art/pixel-characters.js';
+import { iconCanvas } from '../art/pixel-characters.js';
+import { suspectIcon } from './office.js';
 import { drawBackdrop } from '../art/pixel-backdrops.js';
 import { clueSprite } from '../art/sprites.js';
 import { makeRng } from '../engine/rng.js';
@@ -11,6 +13,7 @@ import { fmt } from './comic.js';
 
 export function deduction(c, onSolved) {
   return {
+    exit() { window.__ded = null; },
     enter(root) {
       const px = new Pixel(root);
       const drawBart = expr => { drawBackdrop(px, 'office'); px.blit(pixelCharacter('basset', expr), 8, 176 - CH * 3, 3); };
@@ -46,7 +49,7 @@ export function deduction(c, onSolved) {
         const rng = makeRng();
         rng.shuffle(c.suspects).forEach((s, i) => {
           const card = div('card', { left: (300 + i * 160) + 'px', top: '150px', width: '150px', height: '240px', padding: '6px', fontSize: '16px', lineHeight: '1.15' });
-          const pic = iconCanvas(portrait(s.species), 3); pic.style.margin = '0 auto';
+          const pic = suspectIcon(s, 3); pic.style.margin = '0 auto';
           card.append(pic, div('', { fontWeight: 'bold', fontSize: '18px', margin: '4px 0' }, s.name), div('', {}, s.theory));
           card.addEventListener('pointerdown', e => {
             e.stopPropagation();
@@ -89,6 +92,7 @@ export function deduction(c, onSolved) {
         });
       }
 
+      window.__ded = { who: c.suspects.find(s => s.guilty).name, how: c.deduction.methods.find(m => m.ok).text };
       stepWho();
     },
   };

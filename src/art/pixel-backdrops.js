@@ -17,7 +17,32 @@ function windowPane(px, x, y, w, h) {
 
 export function corkboardRect() { return { x: 20, y: 16, w: 134, h: 84 }; }
 
-export function drawBackdrop(px, name) {
+export const DECOR = [
+  { id: 'fishbowl', name: 'Goldfish bowl', cost: 1 },
+  { id: 'plant', name: 'Potted plant', cost: 2 },
+  { id: 'hatrack', name: 'Hat rack', cost: 2 },
+  { id: 'rug', name: 'Fancy rug', cost: 3 },
+  { id: 'portrait', name: 'Portrait of Nibbles', cost: 3 },
+  { id: 'globe', name: 'Globe', cost: 4 },
+];
+
+function drawDecor(px, decor) {
+  if (decor.includes('fishbowl')) { px.box(196, 96, 18, 14, '#cfe9ff'); px.rect(200, 92, 10, 4, '#cfe9ff'); px.rect(203, 102, 5, 3, P.orange); px.rect(207, 101, 2, 5, P.orange); }
+  if (decor.includes('plant')) { px.box(300, 96, 16, 14, '#c8763a'); px.rect(302, 80, 12, 16, P.green); px.rect(298, 86, 6, 8, P.green); px.rect(312, 84, 6, 8, P.green); px.rect(306, 74, 4, 8, P.green); }
+  if (decor.includes('hatrack')) { px.rect(170, 60, 3, 66, P.woodDark); px.rect(160, 70, 23, 3, P.woodDark); px.rect(160, 62, 12, 4, '#8b5a2b'); px.rect(163, 58, 6, 5, '#8b5a2b'); px.rect(176, 62, 10, 6, P.red); }
+  if (decor.includes('rug')) { px.rect(24, 154, 120, 18, P.blue); px.rect(30, 158, 108, 10, '#7fd1f5'); for (let i = 0; i < 6; i++) px.rect(36 + i * 18, 161, 6, 4, P.yellow); }
+  if (decor.includes('portrait')) { px.box(164, 20, 30, 36, '#c58b4a'); px.rect(168, 24, 22, 28, '#e8d6b0'); px.rect(172, 30, 14, 10, '#a5a5a5'); px.rect(174, 33, 10, 4, '#3a3a3a'); px.rect(175, 34, 2, 2, P.w); px.rect(181, 34, 2, 2, P.w); px.rect(172, 40, 14, 10, '#8e8e8e'); }
+  if (decor.includes('globe')) { px.rect(250, 96, 2, 12, P.woodDark); px.rect(246, 108, 10, 2, P.woodDark); px.ctx.fillStyle = P.k; px.ctx.beginPath(); px.ctx.arc(251, 92, 8, 0, Math.PI * 2); px.ctx.fill(); px.ctx.fillStyle = P.sky; px.ctx.beginPath(); px.ctx.arc(251, 92, 7, 0, Math.PI * 2); px.ctx.fill(); px.rect(247, 89, 5, 4, P.green); px.rect(252, 94, 4, 3, P.green); }
+}
+
+function drawTrophies(px, trophies, gold) {
+  const S = sprites();
+  px.rect(20, 112, 134, 3, P.woodDark);
+  for (let i = 0; i < 8; i++) { if (i < trophies) px.blit(S.trophy, 24 + i * 16, 100); else px.rect(28 + i * 16, 109, 4, 2, '#b9a58a'); }
+  for (let i = 0; i < gold; i++) px.blit(S.star, 24 + i * 11, 118);
+}
+
+export function drawBackdrop(px, name, opts = {}) {
   const S = sprites();
   switch (name) {
     case 'office': {
@@ -36,6 +61,8 @@ export function drawBackdrop(px, name) {
       px.box(230, 100, 26, 10, P.pink); px.rect(240, 96, 8, 6, '#e8a35b'); px.rect(243, 98, 2, 2, P.pink);
       // Rug
       px.rect(24, 154, 120, 18, '#b8433a'); px.rect(30, 158, 108, 10, P.red);
+      if (opts.decor) drawDecor(px, opts.decor);
+      if (opts.trophies !== undefined) drawTrophies(px, opts.trophies, opts.gold || 0);
       break;
     }
     case 'bakery': {
@@ -131,6 +158,51 @@ export function drawBackdrop(px, name) {
       }
       // Stairs
       for (let i = 0; i < 6; i++) px.box(i * 22, 130 - i * 8 + 40, 24, 8, '#a5a5a5');
+      break;
+    }
+    case 'studio': {
+      px.clear('#f4efe6'); stripes(px, '#ece5d8', 6, 30, 122);
+      px.rect(0, 122, PW, 6, P.woodDark); px.rect(0, 128, PW, PH - 128, '#c9b7a0');
+      for (let i = 0; i < PW; i += 36) px.rect(i, 128, 1, PH - 128, '#a08e78');
+      // Paint splats
+      for (const [x, y, c] of [[30, 30, P.red], [60, 60, P.blue], [110, 40, P.yellow], [90, 90, P.green], [40, 100, P.pink]]) { px.rect(x, y, 8, 8, c); px.rect(x - 3, y + 3, 3, 3, c); px.rect(x + 8, y - 2, 3, 3, c); }
+      // Canvases on the wall
+      px.box(150, 20, 50, 40, P.w); for (let i = 0; i < 4; i++) px.rect(156 + i * 10, 28 + (i % 2) * 8, 8, 8, [P.red, P.blue, P.yellow, P.green][i]);
+      px.box(220, 24, 40, 32, P.w); px.rect(226, 30, 28, 20, P.sky); px.rect(226, 42, 28, 8, P.green);
+      // Easel
+      px.rect(276, 60, 3, 100, P.woodDark); px.rect(300, 60, 3, 100, P.woodDark); px.rect(272, 80, 34, 3, P.woodDark);
+      px.box(270, 40, 40, 40, P.w); px.rect(276, 46, 6, 6, P.red); px.rect(284, 46, 6, 6, P.blue); px.rect(292, 46, 6, 6, P.yellow); px.rect(276, 54, 6, 6, P.blue);
+      break;
+    }
+    case 'workshop': {
+      px.clear('#d9c8a8');
+      for (let y = 10; y < 110; y += 8) for (let x = 6; x < PW; x += 8) px.rect(x, y, 2, 2, '#b9a888'); // pegboard
+      px.rect(0, 118, PW, 6, P.woodDark); px.rect(0, 124, PW, PH - 124, '#8b6a45');
+      // Tools on pegboard
+      px.rect(30, 20, 4, 30, P.woodDark); px.rect(24, 14, 16, 8, P.greyDark); // hammer
+      px.rect(60, 16, 3, 34, P.woodDark); for (let i = 0; i < 8; i++) px.rect(63, 18 + i * 4, 6, 2, P.grey); // saw
+      px.box(90, 20, 40, 8, P.yellow); for (let i = 0; i < 8; i++) px.rect(92 + i * 5, 24, 1, 4, P.k); // ruler
+      px.rect(150, 18, 6, 30, P.red); px.rect(148, 14, 10, 6, P.greyDark); // screwdriver
+      // Workbench with planks
+      px.box(170, 90, 140, 12, P.woodDark);
+      px.rect(176, 102, 6, 50, P.woodDark); px.rect(298, 102, 6, 50, P.woodDark);
+      for (let i = 0; i < 3; i++) px.box(180 + i * 4, 78 - i * 6, 90 - i * 20, 6, P.wood);
+      // Sawdust pile
+      px.rect(40, 150, 40, 10, '#e8c99a'); px.rect(48, 146, 24, 4, '#e8c99a');
+      break;
+    }
+    case 'lighthouse': {
+      px.clear('#fff1d6'); stripes(px, '#ffe4e8', 14, 40, 120);
+      // Round window with sea
+      px.rect(210, 20, 80, 70, P.k); px.rect(214, 24, 72, 62, P.sky); px.rect(214, 60, 72, 26, P.water);
+      px.rect(240, 30, 16, 12, P.w); px.rect(244, 26, 8, 4, P.w); px.rect(226, 50, 20, 6, P.w);
+      // Spiral stairs suggestion
+      for (let i = 0; i < 7; i++) px.box(20 + i * 12, 120 - i * 10, 40, 8, '#c9c0aa');
+      // Big lamp
+      px.box(120, 30, 60, 60, P.yellow); px.rect(128, 38, 44, 44, '#ffe98a'); px.rect(140, 50, 20, 20, P.w);
+      px.rect(110, 90, 80, 8, P.greyDark);
+      px.rect(0, 128, PW, 6, P.woodDark); px.rect(0, 134, PW, PH - 134, P.wood);
+      for (let i = 0; i < PW; i += 32) px.rect(i, 134, 1, PH - 134, P.woodDark);
       break;
     }
     default:

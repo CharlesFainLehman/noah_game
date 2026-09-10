@@ -8,13 +8,13 @@ export function newMastery() {
 }
 
 // Returns 'up', 'down', or null.
-export function record(m, ok) {
+export function record(m, ok, lo = MIN_LEVEL, hi = MAX_LEVEL) {
   m.total++;
   if (ok) {
     m.right++;
     m.correct++;
     m.wrong = 0;
-    if (m.correct >= UP_STREAK && m.level < MAX_LEVEL) {
+    if (m.correct >= UP_STREAK && m.level < hi) {
       m.level++;
       m.correct = 0;
       return 'up';
@@ -22,7 +22,7 @@ export function record(m, ok) {
   } else {
     m.wrong++;
     m.correct = 0;
-    if (m.wrong >= DOWN_STREAK && m.level > MIN_LEVEL) {
+    if (m.wrong >= DOWN_STREAK && m.level > lo) {
       m.level--;
       m.wrong = 0;
       return 'down';
@@ -33,4 +33,10 @@ export function record(m, ok) {
 
 export function isMastered(m) {
   return m.level === MAX_LEVEL && m.correct >= UP_STREAK;
+}
+
+// Keep a level inside the parent-set bounds.
+export function clampLevel(m, lo, hi) {
+  m.level = Math.max(lo, Math.min(hi, m.level));
+  return m.level;
 }

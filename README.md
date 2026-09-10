@@ -27,5 +27,9 @@ Runs the node tests for question generation, adaptive difficulty, and sprite dat
 
 ## Status
 
-Playable: Case 3, The Backwards Bakery, end to end. Title, office, comic scenes,
-town map, the Order Up addition game with three adaptive levels, deduction, case closed, save and resume.
+All eight cases are playable, in order. Twelve mini-games with four adaptive levels each.
+Daily case file with badges, office decorations, trophy shelf, and a parent screen
+(hold the Parents button) with level limits, progress by game, reset, and a save code
+for moving progress between devices.
+
+`dev.html?game=clock&level=3` opens one mini-game at one level for quick testing.
