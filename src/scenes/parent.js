@@ -12,7 +12,7 @@ export function parentScreen() {
       const p = div('panel', { left: '20px', top: '16px', width: '920px', height: '508px', fontSize: '18px', overflow: 'hidden' });
       p.innerHTML = `<h2 style="margin-bottom:6px">Parent screen · ${save.player ? save.player.name : ''}</h2>`;
       const table = document.createElement('table');
-      table.style.cssText = 'border-collapse:collapse;font-size:16px;width:560px;float:left';
+      table.style.cssText = 'border-collapse:collapse;font-size:15px;width:520px';
       table.innerHTML = '<tr><th style="text-align:left">Game</th><th>Level</th><th>Right / total</th><th>Set level</th></tr>';
       for (const [id, name] of Object.entries(GAME_NAMES)) {
         const m = mastery(id);
@@ -27,9 +27,9 @@ export function parentScreen() {
         }
         table.append(tr);
       }
-      p.append(table);
-
-      const side = div('', { float: 'right', width: '320px' });
+      const cols = div('', { display: 'flex', gap: '20px', alignItems: 'flex-start' });
+      cols.append(table);
+      const side = div('', { width: '320px', fontSize: '16px' });
       const bounds = div('', { marginBottom: '10px' });
       bounds.innerHTML = `<b>Level limits</b> (games stay between these)<br>`;
       const mk = (label, key) => {
@@ -62,9 +62,10 @@ export function parentScreen() {
       const reset = document.createElement('button'); reset.textContent = 'Erase all progress'; reset.style.cssText = 'font-size:16px;height:32px;background:#ff8a80';
       reset.addEventListener('pointerdown', () => { if (!armed) { armed = true; reset.textContent = 'Tap again to erase everything'; return; } resetSave(); import('./title.js').then(m => go(m.title())); });
       side.append(reset);
-      p.append(side);
+      cols.append(side);
+      p.append(cols);
 
-      p.append(button('Back to the office', { x: 620, y: 430, cls: 'small', onTap: () => import('./office.js').then(m => go(m.office())) }));
+      p.append(button('Back to the office', { x: 600, y: 440, cls: 'small', onTap: () => import('./office.js').then(m => go(m.office())) }));
       root.append(p);
     },
   };
