@@ -222,3 +222,18 @@ docs/              this document
 ## 11. Open questions
 
 - None right now.
+
+## 12. Shark Sums (separate game)
+
+Lives in `shark/`. Shares nothing with the detective game so it can be run and changed on its own.
+
+- Goal: two-digit column addition. Every problem is stacked in tens and ones columns.
+- Step one: add the ones. If the result is 10 or more the game shows the split, writes the ones digit,
+  and floats the carry up beside the tens column. Step two: add the tens plus the carry.
+- Fish nets of ten and single fish mirror the numbers so he can count. The current column is lit.
+- Levels: (1) two-digit plus one-digit, no carry; (2) two-digit plus two-digit, no carry;
+  (3) two-digit plus one-digit with carry; (4) two-digit plus two-digit with carry, sum to 99;
+  (5) sums from 100 to 198. Up after four right in a row, down after two misses.
+- Wrong answer: a hint that points at the fish. Second miss: the step is shown and solved, then play continues.
+- Reward: the shark chomps the fish, then one of six gags. Five in a row: surfboard ride.
+- Saves level, fish eaten, and best streak in localStorage under its own key.
