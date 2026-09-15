@@ -1,6 +1,17 @@
 import { save } from './save.js';
 
 let ac = null;
+// Browsers only start audio after a real user gesture. Touch-down may not count, so unlock on
+// pointerup, touchend and keydown too, and play a silent blip to prime iOS.
+function unlock() {
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === 'suspended') ac.resume();
+    const b = ac.createBuffer(1, 1, 22050), src = ac.createBufferSource(); src.buffer = b; src.connect(ac.destination); src.start(0);
+  } catch (e) { /* no audio */ }
+}
+for (const ev of ['pointerup', 'touchend', 'keydown', 'click']) addEventListener(ev, unlock, { passive: true });
+export const audioState = () => (ac ? ac.state : 'none');
 function ctx() {
   if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
   if (ac.state === 'suspended') ac.resume();
