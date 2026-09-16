@@ -11,6 +11,7 @@ Design: [docs/DESIGN.md](docs/DESIGN.md)
 ## 2. Shark Sums
 
 A small game that teaches two-digit column addition. Add the ones, carry the ten, add the tens.
+Smooth cartoon look (think Freddi Fish), not pixel art. The shark says the prompts in a speech bubble.
 A shark eats the fish and does something silly when the answer is right (backflip, party hat,
 sunglasses, a giant burp, a crab dance, jellyfish disco, and a surfboard ride at five in a row).
 Five levels, from two-digit plus one-digit with no carrying up to sums past 100. The level moves

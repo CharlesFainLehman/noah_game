@@ -226,6 +226,9 @@ docs/              this document
 ## 12. Shark Sums (separate game)
 
 Lives in `shark/`. Shares nothing with the detective game so it can be run and changed on its own.
+Drawn as smooth vector cartoons at full resolution with thick outlines and a rounded hand-lettered font,
+in the style of Humongous Entertainment games. Interface: one worksheet card, the shark's speech bubble,
+a row of number bubbles, a GO button, a backspace, and a speaker icon.
 
 - Goal: two-digit column addition. Every problem is stacked in tens and ones columns.
 - Step one: add the ones. If the result is 10 or more the game shows the split, writes the ones digit,
