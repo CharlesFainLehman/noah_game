@@ -17,6 +17,7 @@ sunglasses, a giant burp, a crab dance, jellyfish disco, and a surfboard ride at
 Five levels, from two-digit plus one-digit with no carrying up to sums past 100. The level moves
 up after four right in a row and down after two misses. Pick a starting level on the start screen.
 Keyboard works too: digits, Backspace, Enter.
+A short tutorial with a Skip button plays on the first boot; "How to play" on the start screen replays it.
 
 Open `shark/index.html` through the same server: http://localhost:8080/shark/
 

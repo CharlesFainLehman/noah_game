@@ -239,4 +239,6 @@ a row of number bubbles, a GO button, a backspace, and a speaker icon.
   (5) sums from 100 to 198. Up after four right in a row, down after two misses.
 - Wrong answer: a hint that points at the fish. Second miss: the step is shown and solved, then play continues.
 - Reward: the shark chomps the fish, then one of six gags. Five in a row: surfboard ride.
-- Saves level, fish eaten, and best streak in localStorage under its own key.
+- Tutorial: eight steps on a fixed example (27 + 35) with spotlights on the columns, the fish, the keypad,
+  GO, the carry, the reward, and the backspace. Skip at any time. Plays once on first boot; replay from the start screen.
+- Saves level, fish eaten, best streak, and whether the tutorial was seen, in localStorage under its own key.

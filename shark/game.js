@@ -1,6 +1,6 @@
 // Shark Sums: two-digit column addition with a shark who celebrates. Cartoon look, simple controls.
 import { ctx, canvas, W, H, toLocal, INK, label, measure, rr, card, circle, ellipse, poly, makeRng, sfx, setMuted, loadSave, storeSave } from './engine.js';
-import { genProblem, record, MAX_LEVEL } from './logic.js';
+import { genProblem, describe, record, MAX_LEVEL } from './logic.js';
 import { C, drawSea, drawFish, drawTenNet, drawShark, drawReward, GAGS, speech } from './art.js';
 
 const rng = makeRng();
@@ -8,6 +8,7 @@ const save = loadSave();
 setMuted(save.muted);
 let q, step = 'start', entry = '', streak = 0, misses = 0, t = 0, msg = '', msgUntil = 0, reward = null, hits = [], levelFlash = '';
 let gagIndex = Math.floor(rng.next() * GAGS.length);
+let tut = -1, tutT0 = 0; // tutorial stage, -1 when not running
 
 function newProblem() { q = genProblem(save.level, rng); step = 'ones'; entry = ''; misses = 0; msg = ''; publish(); }
 
@@ -19,11 +20,12 @@ canvas.addEventListener('pointerdown', e => {
 });
 addEventListener('keydown', e => {
   if (step === 'start') { if (e.key === 'Enter' || e.key === ' ') start(); return; }
+  if (step === 'tutorial') { if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') tutNext(); else if (e.key === 'Escape') tutSkip(); return; }
   if (e.key >= '0' && e.key <= '9') digit(Number(e.key));
   else if (e.key === 'Backspace') back();
   else if (e.key === 'Enter') go();
 });
-function start() { sfx.bubble(); newProblem(); }
+function start() { sfx.bubble(); if (!save.tutorialDone) startTutorial(); else newProblem(); }
 function digit(n) { if (!['ones', 'tens'].includes(step) || entry.length >= 2) return; entry += n; sfx.tap(); publish(); }
 function back() { entry = entry.slice(0, -1); sfx.tap(); }
 
@@ -97,14 +99,14 @@ function drawWorksheet() {
   digits(q.a, 96); digits(q.b, 158); label('+', 300, 158, { size: 50, fill: INK, width: 0 });
   ctx.strokeStyle = INK; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(288, 196); ctx.lineTo(470, 196); ctx.stroke();
   // Answer boxes
-  const onesKnown = ['carry', 'tens', 'tensShown', 'reward'].includes(step), tensKnown = step === 'reward';
+  const onesKnown = ['carry', 'tens', 'tensShown', 'reward', 'done'].includes(step), tensKnown = step === 'reward' || step === 'done';
   const boxAt = (col, str, known, active) => { rr(col - 27, 214, 54, 54, 12); ctx.fillStyle = known ? '#d6f5c9' : active ? '#ffffff' : '#f1f1f1'; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = known ? '#3f9a4f' : INK; ctx.stroke(); if (str) label(str, col, 243, { size: 44, fill: known ? '#2f7f3f' : INK, width: 0 }); };
   boxAt(COL.o, onesKnown ? String(q.onesDigit) : (onesStep && entry ? entry.slice(-1) : ''), onesKnown, onesStep);
   const tensStr = tensKnown ? String(q.tensSum) : (step === 'tens' && entry ? entry : '');
   boxAt(COL.t, tensStr ? tensStr[tensStr.length - 1] : '', tensKnown, tensStep);
   if (q.sum >= 100 || tensStr.length > 1) boxAt(COL.h, tensStr.length > 1 ? tensStr[0] : '', tensKnown, tensStep);
   // Carry bubble flies from the ones box up beside the tens column
-  if (q.carry && ['carry', 'tens', 'tensShown', 'reward'].includes(step)) {
+  if (q.carry && ['carry', 'tens', 'tensShown', 'reward', 'done'].includes(step)) {
     const fly = step === 'carry' ? Math.min(1, Math.max(0, 1 - (msgUntil - t) / 2.4) * 1.5) : 1;
     const ease = 1 - Math.pow(1 - fly, 3);
     const cx = COL.o + (COL.t - 34 - COL.o) * ease, cy = 240 - (240 - 62) * ease;
@@ -123,7 +125,7 @@ function drawWorksheet() {
     ctx.restore();
   };
   const faded = { nets: onesStep, fish: tensStep };
-  const showCarry = q.carry && ['carry', 'tens', 'tensShown', 'reward'].includes(step);
+  const showCarry = q.carry && ['carry', 'tens', 'tensShown', 'reward', 'done'].includes(step);
   block(q.a, 44, faded, false); block(q.b, 168, faded, showCarry);
 }
 
@@ -161,15 +163,60 @@ function drawStart() {
   label('Shark Sums', 480, 80, { size: 92, fill: C.fishY, width: 14 });
   label('Two-digit adding', 480, 140, { size: 30, fill: '#ffffff', width: 7 });
   pillButton(360, 420, 240, 76, 'Play!', '#8fe08f', 'start', start, 44);
+  pillButton(20, 14, 190, 46, 'How to play', '#ffffff', 'howto', () => { sfx.bubble(); startTutorial(); }, 24);
   label('Start at level', 200, 458, { size: 24, fill: '#ffffff', width: 6 });
   for (let L = 1; L <= MAX_LEVEL; L++) bubbleButton(640 + (L - 1) * 62, 458, 26, String(L), L === save.level ? C.fishY : '#ffffff', 'L' + L, () => { save.level = L; save.correct = 0; save.wrong = 0; storeSave(save); sfx.tap(); }, 26);
   if (save.fish) label(`Fish eaten: ${save.fish}   Best streak: ${save.best}`, 480, 520, { size: 20, fill: '#ffffff', width: 5 });
+}
+
+// ----- tutorial -----
+const TUT = [
+  { text: 'Hi! I am Chomp. Let me show you how to play. This is a sum. Tens go on the left, ones on the right.', spots: [[232, 34, 250, 262]], step: 'ones', entry: '' },
+  { text: 'The fish show the same numbers. A net holds ten fish. Loose fish are ones.', spots: [[474, 34, 280, 262]], step: 'ones', entry: '' },
+  { text: 'First add the ONES column. Tap the number bubbles to type 7 + 5 = 12, then tap GO!', spots: [[COL.o - 32, 38, 64, 250], [318, 448, 626, 68], [786, 318, 158, 78]], step: 'ones', entry: '12' },
+  { text: '12 is 1 ten and 2 ones. The 2 goes in the ones box. The 1 floats up to the tens. That is the carry!', spots: [[232, 34, 250, 262]], step: 'tens', entry: '' },
+  { text: 'Now add the TENS column: 2 + 3 + the carry 1 = 6. Type 6 and tap GO!', spots: [[COL.t - 32, 38, 64, 250], [318, 448, 626, 68], [786, 318, 158, 78]], step: 'tens', entry: '6' },
+  { text: 'The answer is 62! Every right answer feeds me fish, and I do something silly to celebrate.', spots: [[232, 34, 250, 262]], step: 'done', entry: '', hat: true },
+  { text: 'Made a mistake? No problem. This button erases a number, and I will give you a hint.', spots: [[708, 323, 68, 68]], step: 'ones', entry: '' },
+  { text: 'Get four right in a row and the sums get bigger. Ready? Let us go!', spots: [], step: 'ones', entry: '' },
+];
+function startTutorial() { q = describe(27, 35); tut = 0; tutT0 = t; step = 'tutorial'; entry = ''; misses = 0; msg = ''; publish(); }
+function tutNext() { sfx.tap(); tut++; tutT0 = t; if (tut >= TUT.length) tutSkip(); else publish(); }
+function tutSkip() { tut = -1; save.tutorialDone = true; storeSave(save); newProblem(); }
+
+function drawTutorial() {
+  const st = TUT[tut];
+  // Draw the game screen in the stage's state
+  const savedStep = step, savedEntry = entry;
+  step = st.step; entry = st.entry;
+  drawSea(t); drawStatus(); drawWorksheet();
+  step = savedStep; entry = savedEntry;
+  drawControls();
+  hits = [];
+  // Dim everything except the spotlights
+  ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H);
+  for (const [x, y, w, h] of st.spots) { const r = 18; ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  ctx.fillStyle = 'rgba(5,30,60,0.62)'; ctx.fill('evenodd'); ctx.restore();
+  const pulse = 4 + Math.sin(t * 5) * 2;
+  for (const [x, y, w, h] of st.spots) { rr(x, y, w, h, 18); ctx.lineWidth = pulse; ctx.strokeStyle = C.fishY; ctx.stroke(); }
+  // The shark explains
+  const bob = Math.sin(t * 2) * 5;
+  drawShark(150, 430 + bob, { t, expr: 'happy', mouth: 0.12 + Math.abs(Math.sin(t * 3)) * 0.1, flip: true, scale: 0.95, hat: !!st.hat });
+  const lines = wrap(st.text, 390, 24), h = 28 + lines.length * 28;
+  speech(280, 402 - h, 430, h, 250, 405 + bob, '#ffffff');
+  lines.forEach((ln, i) => label(ln, 495, 402 - h + 22 + i * 28, { size: 24, fill: INK, width: 0 }));
+  // Buttons
+  pillButton(620, 14, 160, 48, tut === TUT.length - 1 ? 'Play!' : 'Next', '#8fe08f', 'next', tutNext, 30);
+  pillButton(796, 14, 148, 48, 'Skip', '#ffffff', 'skip', tutSkip, 26);
+  label(`${tut + 1} / ${TUT.length}`, 870, 82, { size: 20, fill: '#ffffff', width: 5 });
+  window.__shark = { step: 'tutorial', tut, hits: hits.map(h => ({ x: h.x, y: h.y, w: h.w, h: h.h, r: h.r, id: h.id })) };
 }
 
 function frame(now) {
   t = now / 1000;
   hits = [];
   if (step === 'start') { drawStart(); publish(); requestAnimationFrame(frame); return; }
+  if (step === 'tutorial') { drawTutorial(); requestAnimationFrame(frame); return; }
   if (step === 'reward') {
     const p = (t - reward.t0) / reward.dur;
     if (p >= 1) { newProblem(); requestAnimationFrame(frame); return; }
